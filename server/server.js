@@ -4,11 +4,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
+const delivery = require("./routes/delivery.js");
 // const { sequelize } = require("./config/database");
 // const authRoutes = require("./routes/auth");
 // const deliveryRoutes = require("./routes/delivery");
 const tspService = require("./services/tspService.js");
-const { ClerkExpress } = require("@clerk/clerk-sdk-node");
+// const { ClerkExpress } = require("@clerk/clerk-sdk-node");
 const app = express();
 const port = 3000;
 
@@ -26,6 +27,8 @@ app.get("/", async (req, res) => {
     return res.send("Error");
   }
 });
+
+app.use("/delivery", delivery);
 // Routes
 // app.use("/api/auth", authRoutes);
 // app.use("/api/delivery", deliveryRoutes);
@@ -92,13 +95,9 @@ app.get("/", async (req, res) => {
 
 // // Start the server
 
-
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
-
-
-
 
 // const express = require('express');
 // const { Client } = require('pg');
