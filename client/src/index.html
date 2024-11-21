@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routing with OpenStreetMap</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map { height: 600px; }
+    </style>
+</head>
+<body>
+    <h1>Traveling Salesman Problem (TSP) Route</h1>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([50.73743, 7.098206], 13); // Set initial position (e.g., one of the cities)
+
+        // Set OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Fetch the route from the backend
+        fetch('/getRoute')
+            .then(response => response.json())
+            .then(route => {
+                const latlngs = []; // Array to store coordinates of the route
+
+                // Loop through each edge in the route and get coordinates
+                route.forEach(edge => {
+                    // Fetch the source and target locations from your database (or use predefined coordinates)
+                    // For simplicity, we're assuming we have the lat/lng for each vertex in your frontend
+
+                    // Example: Replace this with actual database queries or predefined coordinates
+                    const sourceCoords = [50.73743, 7.098206]; // Example coordinates (City 1)
+                    const targetCoords = [50.735887, 7.101445]; // Example coordinates (City 2)
+
+                    latlngs.push([sourceCoords, targetCoords]);
+                });
+
+                // Draw the route on the map using a Polyline
+                const routePolyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
+
+                // Adjust the map view to fit the route
+                map.fitBounds(routePolyline.getBounds());
+            })
+            .catch(error => {
+                console.error('Error fetching route:', error);
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+SELECT seq, node, cost, agg_cost FROM pgr_TSP( $$ SELECT * FROM pgr_dijkstraCostMatrix( 'SELECT id, source, target, cost, reverse_cost FROM edges', (SELECT array_agg(id) FROM vertices), directed := false ) $$, 1 );
