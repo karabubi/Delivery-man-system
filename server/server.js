@@ -5,12 +5,14 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 const delivery = require("./routes/delivery.js");
-// const { sequelize } = require("./config/database");
-// const authRoutes = require("./routes/auth");
-// const deliveryRoutes = require("./routes/delivery");
 const tspService = require("./services/tspService.js");
-// const { ClerkExpress } = require("@clerk/clerk-sdk-node");
+
+// const authRoutes = require('./routes/authRoutes');
+// const routeRoutes = require('./routes/routeRoutes');
+// const deliveryRoutes = require('./routes/deliveryRoutes');
+
 const app = express();
+
 const port = 3000;
 
 // Middleware
@@ -29,6 +31,14 @@ app.get("/", async (req, res) => {
 });
 
 app.use("/delivery", delivery);
+
+// app.use('/api/auth', authRoutes);
+// app.use('/api/route', routeRoutes);
+// app.use('/api/delivery', deliveryRoutes);
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
 // Routes
 // app.use("/api/auth", authRoutes);
 // app.use("/api/delivery", deliveryRoutes);
@@ -95,9 +105,7 @@ app.use("/delivery", delivery);
 
 // // Start the server
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+
 
 // const express = require('express');
 // const { Client } = require('pg');
