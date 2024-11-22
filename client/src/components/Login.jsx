@@ -17,7 +17,7 @@ const Login = () => {
       const response = await axios.post('/api/auth/login', formData);
       localStorage.setItem('token', response.data.token);
       alert('Login successful');
-      navigate('/delivery');
+      navigate('/addresses');
     } catch (error) {
       const errorMsg = error?.response?.data?.error || 'An error occurred.';
       alert(`Error: ${errorMsg}`);
@@ -25,17 +25,26 @@ const Login = () => {
   };
 
   return (
-    <>
-
     <div className="container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Login</button>
       </form>
     </div>
-    </>
   );
 };
 
