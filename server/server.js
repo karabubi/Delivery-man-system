@@ -1,5 +1,3 @@
-
-
 // Load environment variables
 require("dotenv").config();
 
@@ -75,28 +73,45 @@ app.post("/delivery", async (req, res) => {
 });
 
 // OSRM Public API Integration
-app.get("/api/best-route", async (req, res) => {
-  const encodedPolyline = req.query.polyline || "ofp_Ik_vpAilAyu@te@g`E"; // Example polyline
+app.post("/api/best-route", async (req, res) => {
+  const { locations } = req.body; // Expecting an array of coordinates [lng, lat]
+
+  if (!locations || locations.length < 2) {
+    return res.status(400).json({ error: "At least two locations are required." });
+  }
 
   try {
-    const apiUrl = `http://router.project-osrm.org/route/v1/driving/polyline(${encodedPolyline})?overview=false`;
+    // Prepare OSRM API URL
+    const coordinates = locations.map(loc => `${loc.lng},${loc.lat}`).join(";");
+    const apiUrl = `http://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full`;
+
+    // Call the OSRM API
     const response = await axios.get(apiUrl);
 
+    if (!response.data || !response.data.routes || response.data.routes.length === 0) {
+      throw new Error("No route found.");
+    }
+
+    // Extract route details
     const route = response.data.routes[0];
-    const legs = route.legs.map((leg) => ({
-      distance: leg.distance, // Distance in meters
-      duration: leg.duration, // Duration in seconds
-      summary: leg.summary, // Road summary
+    const { distance, duration, geometry } = route;
+    const legs = route.legs.map((leg, index) => ({
+      legNumber: index + 1,
+      distance: leg.distance, // in meters
+      duration: leg.duration, // in seconds
+      summary: leg.summary,
     }));
 
+    // Send response
     res.status(200).json({
-      distance: route.distance, // Total distance
-      duration: route.duration, // Total duration
-      legs, // Route leg details
+      distance, // Total distance in meters
+      duration, // Total duration in seconds
+      legs, // Detailed legs of the route
+      geometry, // GeoJSON for visualization
     });
   } catch (err) {
     console.error("Error calculating route:", err.message);
-    res.status(500).json({ error: "Failed to calculate route" });
+    res.status(500).json({ error: "Failed to calculate route", details: err.message });
   }
 });
 
@@ -104,7 +119,3 @@ app.get("/api/best-route", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
-
-
-
