@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import MapView from './MapView';
-
+import MapDisplay from './MapDisplay';
 const DeliveryManagement = () => {
   const [deliveries, setDeliveries] = useState([]);
   const [address, setAddress] = useState('');
@@ -52,7 +51,7 @@ const DeliveryManagement = () => {
       <button onClick={addDelivery} disabled={loading}>
         {loading ? 'Adding...' : 'Add Delivery'}
       </button>
-      <MapView deliveries={deliveries} />
+      <MapDisplay deliveries={deliveries} />
     </div>
   );
 };

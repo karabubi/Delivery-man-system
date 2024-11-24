@@ -14,6 +14,9 @@ CREATE TABLE users (
 INSERT INTO users (username, email, password)
 VALUES ('new_user', 'user@example.com', 'hashed_password');
 
+-- Insert a new user (password is plaintext here for example purposes)
+INSERT INTO users (username, email, password)
+VALUES ('saleh', 'karabubi66@yahoo.com', '123');
 
 -- Check user credentials for login
 SELECT id, username, password
