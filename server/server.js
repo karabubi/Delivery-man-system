@@ -1,180 +1,110 @@
-const dotenv = require("dotenv/config");
-const db = require("./util/db-connect.js");
+
+
+// Load environment variables
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-require("dotenv").config();
-const delivery = require("./routes/delivery.js");
-const tspService = require("./services/tspService.js");
+const { Client } = require("pg"); // PostgreSQL client
+const axios = require("axios"); // HTTP requests for OSRM public API
 
-// const authRoutes = require('./routes/authRoutes');
-// const routeRoutes = require('./routes/routeRoutes');
-// const deliveryRoutes = require('./routes/deliveryRoutes');
-
-const app = express();
-
-const port = 3000;
+const app = express(); // Initialize Express app
+const PORT = process.env.PORT || 3000; // Server port
 
 // Middleware
-app.use(bodyParser.json());
-app.use(cors());
-// app.use(ClerkExpress(requireAuth));
-app.get("/", async (req, res) => {
+app.use(bodyParser.json()); // Parse JSON payloads
+app.use(cors()); // Enable CORS for all routes
+
+// PostgreSQL Client Setup
+const db = new Client({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT || 5432,
+});
+
+db.connect()
+  .then(() => console.log("Database connected successfully"))
+  .catch((err) => console.error("Database connection error:", err.message));
+
+// Health Check
+app.get("/", (req, res) => {
+  res.status(200).send("Server is running");
+});
+
+// Fetch Users (Example Endpoint)
+app.get("/users", async (req, res) => {
   try {
-    const result = await db("users");
-    console.log(tspService);
-    return res.json(result);
-  } catch (error) {
-    console.log(error);
-    return res.send("Error");
+    const result = await db.query("SELECT * FROM users");
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching users:", err.message);
+    res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 
-app.use("/delivery", delivery);
-
-// app.use('/api/auth', authRoutes);
-// app.use('/api/route', routeRoutes);
-// app.use('/api/delivery', deliveryRoutes);
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+// Delivery Management Endpoints
+app.get("/delivery", async (req, res) => {
+  try {
+    const result = await db.query("SELECT * FROM deliveries");
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching deliveries:", err.message);
+    res.status(500).json({ error: "Failed to fetch deliveries" });
+  }
 });
-// Routes
-// app.use("/api/auth", authRoutes);
-// app.use("/api/delivery", deliveryRoutes);
 
-// Database and Server Initialization
-// sequelize
-//   .sync()
-//   .then(() => {
-//     console.log("Database connected");
-//     app.listen(process.env.PORT || 3000, () =>
-//       console.log(`Server running on port ${process.env.PORT || 3000}`)
-//     );
-//   })
-//   .catch((err) => console.error("Error connecting to the database:", err));
+app.post("/delivery", async (req, res) => {
+  const { address, positionLatitude, positionLongitude } = req.body;
 
-//-----------
+  try {
+    const query = `
+      INSERT INTO deliveries (address, position_latitude, position_longitude)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+    `;
+    const values = [address, positionLatitude, positionLongitude];
+    const result = await db.query(query, values);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error("Error adding delivery:", err.message);
+    res.status(500).json({ error: "Failed to add delivery" });
+  }
+});
 
-// const express = require('express');
-// const pgp = require('pg-promise')();
-// const path = require('path');
+// OSRM Public API Integration
+app.get("/api/best-route", async (req, res) => {
+  const encodedPolyline = req.query.polyline || "ofp_Ik_vpAilAyu@te@g`E"; // Example polyline
 
-// // Set up the PostgreSQL connection
-// const db = pgp({
-//     host: 'localhost', // Change this if your database is hosted remotely
-//     port: 5432,
-//     database: 'your_database_name', // Replace with your database name
-//     user: 'your_username', // Replace with your database username
-//     password: 'your_password' // Replace with your database password
-// });
+  try {
+    const apiUrl = `http://router.project-osrm.org/route/v1/driving/polyline(${encodedPolyline})?overview=false`;
+    const response = await axios.get(apiUrl);
 
-// const app = express();
-// const port = 3000;
+    const route = response.data.routes[0];
+    const legs = route.legs.map((leg) => ({
+      distance: leg.distance, // Distance in meters
+      duration: leg.duration, // Duration in seconds
+      summary: leg.summary, // Road summary
+    }));
 
-// // Serve static files (like HTML, JS, CSS) from the "public" directory
-// app.use(express.static('public'));
+    res.status(200).json({
+      distance: route.distance, // Total distance
+      duration: route.duration, // Total duration
+      legs, // Route leg details
+    });
+  } catch (err) {
+    console.error("Error calculating route:", err.message);
+    res.status(500).json({ error: "Failed to calculate route" });
+  }
+});
 
-// // Endpoint to get the route (TSP solution)
-// app.get('/getRoute', async (req, res) => {
-//     try {
-//         // Replace the array with the list of vertex IDs for your TSP query
-//         const vertexIds = [1, 2, 3, 4]; // Example set of vertex IDs
-//         const query = `
-//             SELECT * FROM pgr_tsp(
-//                 'SELECT id, source, target, cost, reverse_cost FROM edges',
-//                 $1::int[]
-//             ) AS route;
-//         `;
-//         const result = await db.any(query, [vertexIds]);
-
-//         // Format the result into a simpler structure for the frontend
-//         const route = result.map(r => ({
-//             source: r.source,
-//             target: r.target,
-//             cost: r.cost,
-//             edgeId: r.edge
-//         }));
-
-//         res.json(route); // Send the route as a JSON response
-//     } catch (error) {
-//         console.error('Error querying database:', error);
-//         res.status(500).send('Error calculating the route');
-//     }
-// });
-
-// // Start the server
+// Start the Server
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
 
 
 
-// const express = require('express');
-// const { Client } = require('pg');
-// const OSRM = require('osrm');
-// const app = express();
-// const PORT = process.env.PORT || 3001;
 
-// const osrm = new OSRM({
-//   path: 'path/to/osrm-backend-data.osrm', // Path to your OSRM data
-//   algorithm: 'MLD' // Multi-Level Dijkstra algorithm
-// });
-
-// // PostgreSQL client setup
-// const client = new Client({
-//   user: 'yourUsername',
-//   host: 'localhost',
-//   database: 'yourDatabaseName',
-//   password: 'yourPassword',
-//   port: 5432
-// });
-
-// client.connect();
-
-// const getLocationsFromDB = async () => {
-//   const result = await client.query('SELECT name, latitude, longitude FROM locations');
-//   return result.rows.map(row => ({
-//     name: row.name,
-//     coords: [row.latitude, row.longitude]
-//   }));
-// };
-
-// // Helper function to get coordinates for the best route
-// const getBestRouteCoordinates = (locations, bestRoute) => {
-//   return bestRoute.map(locationName => {
-//     const location = locations.find(loc => loc.name === locationName);
-//     return location ? location.coords : null;
-//   }).filter(coord => coord !== null);
-// };
-
-// // Define endpoint for best route calculation
-// app.get('/api/best-route', async (req, res) => {
-//   try {
-//     const locations = await getLocationsFromDB();
-//     const bestRoute = locations.map(loc => loc.name); // Dummy logic for best route, replace with actual logic
-//     const coordinates = getBestRouteCoordinates(locations, bestRoute);
-//     const options = {
-//       coordinates: coordinates,
-//       overview: 'full',
-//       geometries: 'geojson'
-//     };
-
-//     osrm.route(options, (err, result) => {
-//       if (err) {
-//         res.status(500).json({ error: err.message });
-//         return;
-//       }
-
-//       // Estimate time in minutes
-//       const estimatedTime = result.routes[0].duration / 60;
-//       res.json({
-//         route: result.routes[0].geometry.coordinates,
-//         estimatedTime: estimatedTime.toFixed(2) // returning estimated time in minutes
-//       });
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });

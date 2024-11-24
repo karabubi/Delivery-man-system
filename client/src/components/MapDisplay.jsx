@@ -5,6 +5,7 @@ import axios from 'axios';
 const MapDisplay = () => {
   const [locations, setLocations] = useState([]);
   const [route, setRoute] = useState([]);
+  const[error,setError]=useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,13 +13,15 @@ const MapDisplay = () => {
         const response = await axios.get('/api/route');
         setLocations(response.data.locations);
         setRoute(response.data.route);
-      } catch (error) {
-        console.error('Error fetching route data:', error);
+      } catch (err) {
+        setError('Error fetching route data');
       }
     };
     fetchData();
   }, []);
-
+  if (error) return <p>{error}</p>;
+  if (!locations.length) return <p>Loading...</p>;
+ 
   return (
     <MapContainer center={[50.73743, 7.098206]} zoom={13} style={{ height: '500px', width: '100%' }}>
       <TileLayer
