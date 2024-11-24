@@ -61,10 +61,11 @@ let publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const App = () => {
   return (
     <ClerkProvider publishableKey={publishableKey}>
+  {/* Navbar is placed at the top of the page */}
+  <NavBar />
+  {/* Render child routes */}
+      <Outlet />
       
-      <Home/>
-      
-      <Outlet></Outlet>
     </ClerkProvider>
   );
 };

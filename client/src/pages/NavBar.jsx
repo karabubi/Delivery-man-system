@@ -74,33 +74,79 @@
 
 
 
+// vergin 23-11-24
 
+// import { Link } from 'react-router-dom';
+// import { SignOutButton } from '@clerk/clerk-react';
+// import './NavBar.css'; // Importing the CSS file for styling
+// const NavBar = () => {
+//   return (
+//     <nav className="navbar">
+//       <div className="navbar-left">
+//         <p className="navbar-title">Delivery System</p>
+//       </div>
+//       <div className="navbar-links">
+//         <Link to="/login" className="nav-link">Login</Link>
+//         <Link to="/Register" className="nav-link" >Register</Link>
+//       </div>
+//       <div className="navbar-signout">
+//         <SignOutButton />
+//       </div>
+//     </nav>
+//   );
+// };
 
-import { Link } from 'react-router-dom';
-import { SignOutButton } from '@clerk/clerk-react';
-import './NavBar.css'; // Importing the CSS file for styling
-const NavBar = () => {
-  return (
-    <nav className="navbar">
-      <div className="navbar-left">
-        <p className="navbar-title">Delivery System</p>
-      </div>
-      <div className="navbar-links">
-        <Link to="/login" className="nav-link">Login</Link>
-        <Link to="/Register" className="nav-link" >Register</Link>
-      </div>
-      <div className="navbar-signout">
-        <SignOutButton />
-      </div>
-    </nav>
-  );
-};
-
-export default NavBar;
+// export default NavBar;
 
   
 
 
+
+import { useUser, useClerk } from '@clerk/clerk-react'; // Clerk authentication hooks
+import { Link, useNavigate } from 'react-router-dom';
+import './NavBar.css'; // Importing the CSS file for styling
+
+const NavBar = () => {
+    const { isSignedIn } = useUser(); // Check if the user is authenticated
+    const { signOut } = useClerk(); // Clerk's signOut method
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await signOut(); // Log out the user
+        navigate('/'); // Redirect to home page after logout
+    };
+
+    return (
+        <nav className="navbar">
+            <div className="navbar-left">
+                <p className="navbar-title">Delivery System</p>
+            </div>
+            <div className="navbar-links">
+                {!isSignedIn ? (
+                    <>
+                        <Link to="/login" className="nav-link">
+                            Login
+                        </Link>
+                        <Link to="/register" className="nav-link">
+                            Register
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <button className="nav-link" onClick={() => navigate('/dashboard')}>
+                            Dashboard
+                        </button>
+                        <button className="nav-link logout-button" onClick={handleLogout}>
+                            Logout
+                        </button>
+                    </>
+                )}
+            </div>
+        </nav>
+    );
+};
+
+export default NavBar;
 
 
 
