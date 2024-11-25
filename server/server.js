@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { Client } = require("pg"); // PostgreSQL client
 const axios = require("axios"); // HTTP requests for OSRM public API
-
+const addressesRoute=require("./routes/addresses.js")
 const app = express(); // Initialize Express app
 const PORT = process.env.PORT || 3000; // Server port
 
@@ -14,24 +14,24 @@ const PORT = process.env.PORT || 3000; // Server port
 app.use(bodyParser.json()); // Parse JSON payloads
 app.use(cors()); // Enable CORS for all routes
 
-// PostgreSQL Client Setup
-const db = new Client({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT || 5432,
-});
 
-db.connect()
-  .then(() => console.log("Database connected successfully"))
-  .catch((err) => console.error("Database connection error:", err.message));
+
+
+
+// // Function to fetch all addresses from PostgreSQL
+
+
+
+
+
+
+
 
 // Health Check
 app.get("/", (req, res) => {
   res.status(200).send("Server is running");
 });
-
+app.use("/api/addresses",addressesRoute)
 // Fetch Users (Example Endpoint)
 app.get("/users", async (req, res) => {
   try {
