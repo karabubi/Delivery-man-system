@@ -105,6 +105,16 @@ const NavBar = () => {
           </>
         ) : (
           <>
+      <Link to="/dashboard" className="nav-link">
+              Route Dashboard
+            </Link>
+            <Link to="/manage" className="nav-link">
+              Delivery Management
+            </Link>
+            <Link to="/map" className="nav-link">
+              Map View
+            </Link>
+
             <button className="nav-link" onClick={() => navigate("/dashboard")}>
               Dashboard
             </button>
