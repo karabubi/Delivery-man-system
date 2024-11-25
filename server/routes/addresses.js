@@ -1,8 +1,9 @@
-const express = require('express');
-const axios = require('axios');
-const Address = require('../models/Address');
-const authMiddleware = require('../middlewares/authMiddleware');
+const express = require("express");
+const axios = require("axios");
+
+const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
+const db = require("../util/db-connect.js");
 
 const generateSampleAddresses = async () => {
   const url = "https://nominatim.openstreetmap.org/search";
@@ -11,7 +12,7 @@ const generateSampleAddresses = async () => {
     country: "Germany",
     street: "",
     format: "json",
-    limit: 100
+    limit: 100,
   };
 
   const addresses = [];
@@ -22,7 +23,7 @@ const generateSampleAddresses = async () => {
       const { display_name, lat, lon } = response.data[0];
       addresses.push({
         street: display_name,
-        city: 'Bonn',
+        city: "Bonn",
         latitude: parseFloat(lat),
         longitude: parseFloat(lon),
       });
@@ -32,23 +33,47 @@ const generateSampleAddresses = async () => {
 };
 
 // Generate and Save Sample Addresses
-router.post('/generate', authMiddleware, async (req, res) => {
+router.post("/generate", authMiddleware, async (req, res) => {
   try {
     const addresses = await generateSampleAddresses();
     await Address.bulkCreate(addresses);
-    res.status(201).json({ message: 'Sample addresses generated and saved successfully', addresses });
+    res.status(201).json({
+      message: "Sample addresses generated and saved successfully",
+      addresses,
+    });
   } catch (err) {
-    res.status(400).json({ error: 'Error generating sample addresses', details: err.message });
+    res.status(400).json({
+      error: "Error generating sample addresses",
+      details: err.message,
+    });
   }
 });
 
-// Get All Addresses
-router.get('/', authMiddleware, async (req, res) => {
+// Function to fetch all addresses from PostgreSQL
+const getAllAddresses = async () => {
   try {
-    const addresses = await Address.findAll();
+    const addresses = await db("locations").select(
+      "address",
+      "latitude",
+      "longitude"
+    );
+    console.log(addresses);
+    return addresses;
+  } catch (err) {
+    console.error("Error fetching addresses:", err);
+    throw new Error("Unable to fetch addresses");
+  }
+};
+
+// Route to get all addresses from the database
+router.get("/", async (req, res) => {
+  try {
+    const addresses = await getAllAddresses();
     res.status(200).json({ addresses });
   } catch (err) {
-    res.status(400).json({ error: 'Error fetching addresses', details: err.message });
+    res
+      .status(400)
+      .json({ error: "Error fetching addresses", details: err.message });
   }
 });
 
