@@ -1,5 +1,6 @@
 // Load environment variables
 require("dotenv").config();
+const routeRoutes = require("./routes/routeRoutes"); // Adjust the path if needed
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -13,19 +14,6 @@ const PORT = process.env.PORT || 3000; // Server port
 // Middleware
 app.use(bodyParser.json()); // Parse JSON payloads
 app.use(cors()); // Enable CORS for all routes
-
-
-
-
-
-// // Function to fetch all addresses from PostgreSQL
-
-
-
-
-
-
-
 
 // Health Check
 app.get("/", (req, res) => {
@@ -43,7 +31,7 @@ app.get("/users", async (req, res) => {
   }
 });
 
-// Delivery Management Endpoints
+// Legacy Delivery Management Endpoints (Optional, can be phased out)
 app.get("/delivery", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM deliveries");
@@ -72,50 +60,59 @@ app.post("/delivery", async (req, res) => {
   }
 });
 
-// OSRM Public API Integration
+// OSRM Public API Integration (Legacy)
 app.post("/api/best-route", async (req, res) => {
-  const { locations } = req.body; // Expecting an array of coordinates [lng, lat]
+  const { locations } = req.body;
 
   if (!locations || locations.length < 2) {
-    return res.status(400).json({ error: "At least two locations are required." });
+    return res
+      .status(400)
+      .json({ error: "At least two locations are required." });
   }
 
   try {
-    // Prepare OSRM API URL
-    const coordinates = locations.map(loc => `${loc.lng},${loc.lat}`).join(";");
+    const coordinates = locations
+      .map((loc) => `${loc.lng},${loc.lat}`)
+      .join(";");
     const apiUrl = `http://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full`;
 
-    // Call the OSRM API
     const response = await axios.get(apiUrl);
 
-    if (!response.data || !response.data.routes || response.data.routes.length === 0) {
+    if (
+      !response.data ||
+      !response.data.routes ||
+      response.data.routes.length === 0
+    ) {
       throw new Error("No route found.");
     }
 
-    // Extract route details
     const route = response.data.routes[0];
     const { distance, duration, geometry } = route;
     const legs = route.legs.map((leg, index) => ({
       legNumber: index + 1,
-      distance: leg.distance, // in meters
-      duration: leg.duration, // in seconds
+      distance: leg.distance,
+      duration: leg.duration,
       summary: leg.summary,
     }));
 
-    // Send response
     res.status(200).json({
-      distance, // Total distance in meters
-      duration, // Total duration in seconds
-      legs, // Detailed legs of the route
-      geometry, // GeoJSON for visualization
+      distance,
+      duration,
+      legs,
+      geometry,
     });
   } catch (err) {
     console.error("Error calculating route:", err.message);
-    res.status(500).json({ error: "Failed to calculate route", details: err.message });
+    res
+      .status(500)
+      .json({ error: "Failed to calculate route", details: err.message });
   }
 });
 
-// Start the Server
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+// Modularized Routes
+//app.use('/auth', authRoutes); // Authentication (register, login)
+app.use("/route", routeRoutes); // Route optimization
+
+app.listen(PORT, () =>
+  console.log(`Server running at http://localhost:${PORT}`)
+);
