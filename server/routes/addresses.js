@@ -1,13 +1,6 @@
-<<<<<<< Updated upstream
 const express = require("express");
 const axios = require("axios");
-
 const authMiddleware = require("../middlewares/authMiddleware");
-=======
-const express = require('express');
-const axios = require('axios');
-const authMiddleware = require('../middlewares/authMiddleware');
->>>>>>> Stashed changes
 const router = express.Router();
 const db = require("../util/db-connect.js");
 
@@ -42,33 +35,28 @@ const generateSampleAddresses = async () => {
 router.post("/generate", authMiddleware, async (req, res) => {
   try {
     const addresses = await generateSampleAddresses();
-    await Address.bulkCreate(addresses);
-    res.status(201).json({
-      message: "Sample addresses generated and saved successfully",
-      addresses,
-    });
+   // Assuming you're using Knex, save bulk addresses to the database
+   await knex('locations').insert(addresses);
+   res.status(201).json({ message: 'Sample addresses generated and saved successfully', addresses });
+ } catch (err) {
+   res.status(400).json({ error: 'Error generating sample addresses', details: err.message });
+ }
+});
+
+
+// Route to get all addresses from the database
+router.get('/addresses', authMiddleware, async (req, res) => {
+  try {
+    const addresses = await getAllAddresses(); // Fetch addresses using the Knex function
+    res.status(200).json({ addresses });
   } catch (err) {
-    res.status(400).json({
-      error: "Error generating sample addresses",
-      details: err.message,
-    });
+    res.status(400).json({ error: 'Error fetching addresses', details: err.message });
   }
 });
 
-<<<<<<< Updated upstream
-// Function to fetch all addresses from PostgreSQL
-=======
-// // Get All Addresses
-// router.get('/', authMiddleware, async (req, res) => {
-//   try {
-//     const addresses = await Address.findAll();
-//     res.status(200).json({ addresses });
-//   } catch (err) {
-//     res.status(400).json({ error: 'Error fetching addresses', details: err.message });
-//   }
-// Function to fetch all addresses from PostgreSQL
 
->>>>>>> Stashed changes
+
+// Function to fetch all addresses from PostgreSQL
 const getAllAddresses = async () => {
   try {
     const addresses = await db("locations").select(
@@ -84,25 +72,16 @@ const getAllAddresses = async () => {
   }
 };
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 // Route to get all addresses from the database
 router.get("/", async (req, res) => {
   try {
     const addresses = await getAllAddresses();
     res.status(200).json({ addresses });
   } catch (err) {
-<<<<<<< Updated upstream
-=======
-    res.status(400).json({ error: 'Error fetching addresses', details: err.message });
->>>>>>> Stashed changes
     res
       .status(400)
       .json({ error: "Error fetching addresses", details: err.message });
   }
-
 });
 
 module.exports = router;

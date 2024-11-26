@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AddressList = () => {
   const [addresses, setAddresses] = useState([]);
@@ -9,13 +9,16 @@ const AddressList = () => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/addresses', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          "http://localhost:3000/api/addresses",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setAddresses(response.data.addresses);
       } catch (error) {
-        console.error('Error fetching addresses:', error);
+        console.error("Error fetching addresses:", error);
       }
     };
     fetchAddresses();
@@ -25,14 +28,17 @@ const AddressList = () => {
     <div className="container">
       <h2>My Addresses</h2>
       <ul>
+        {/* Using .map() to iterate over the addresses */}
         {addresses.map((address, index) => (
-          <li key={index}>
-            {address}
-            {/* Add Edit/Delete functionality if needed */}
+          <li key={index}> {/* Each list item needs a unique key */}
+            <div>
+              <strong>Address:</strong> {address.address} <br />
+              <strong>Latitude:</strong> {address.latitude} <br />
+              <strong>Longitude:</strong> {address.longitude} <br />
+            </div>
           </li>
         ))}
       </ul>
-      <button onClick={() => navigate('/dashboard')}>Map View</button>
     </div>
   );
 };

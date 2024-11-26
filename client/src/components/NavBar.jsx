@@ -72,6 +72,7 @@
 import { useUser, useClerk } from "@clerk/clerk-react"; // Clerk authentication hooks
 import { Link, useNavigate } from "react-router-dom";
 import "./NavBar.css"; // Importing the CSS file for styling
+import { SignInButton, UserButton } from "@clerk/clerk-react";
 
 const NavBar = () => {
   const { isSignedIn } = useUser(); // Check if the user is authenticated
@@ -96,17 +97,15 @@ const NavBar = () => {
         </Link>
         {!isSignedIn ? (
           <>
-            <Link to="/login" className="nav-link">
-              Login
-            </Link>
-            <Link to="/register" className="nav-link">
-              Register
-            </Link>
+            <SignInButton />
           </>
         ) : (
           <>
-      <Link to="/dashboard" className="nav-link">
+            <Link to="/dashboard" className="nav-link">
               Route Dashboard
+            </Link>
+            <Link to="/addresses" className="nav-link">
+              Addresses
             </Link>
             <Link to="/manage" className="nav-link">
               Delivery Management
@@ -115,12 +114,7 @@ const NavBar = () => {
               Map View
             </Link>
 
-            <button className="nav-link" onClick={() => navigate("/dashboard")}>
-              Dashboard
-            </button>
-            <button className="nav-link logout-button" onClick={handleLogout}>
-              Logout
-            </button>
+            <UserButton></UserButton>
           </>
         )}
       </div>
@@ -130,13 +124,9 @@ const NavBar = () => {
 
 export default NavBar;
 
-
 //----24-11-24
 
-
-
 // NavBar.js
-
 
 // import { Link } from "react-router-dom";
 // import { SignOutButton, SignedIn, SignedOut } from "@clerk/clerk-react";
@@ -171,9 +161,6 @@ export default NavBar;
 // };
 
 // export default NavBar;
-
-
-
 
 // import "./NavBar.css";
 // import { NavLink } from "react-router-dom";
