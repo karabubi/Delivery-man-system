@@ -179,7 +179,9 @@ const DeliveryManagement = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/delivery", { address }); // <--- Specify the real link. Should be http://localhost:3000/Name_Of_Your_Server_Route
+      const response = await axios.post("http://localhost:3000/api/delivery", {
+        address,
+      });
       const newDelivery = response.data.delivery;
       console.log(address);
       setDeliveries((prev) => [...prev, newDelivery]);
