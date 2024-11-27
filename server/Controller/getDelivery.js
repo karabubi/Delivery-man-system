@@ -16,6 +16,11 @@ exports.addDelivery = async (req, res) => {
   const { userId, address, positionLatitude, positionLongitude } = req.body;
 
   try {
+    // ❗️❗️❗️It seems you are not using any of the values that you extracted from req.body above.
+    // I would suggest to rewrite INSERT statement below like this:
+    // `INSERT INTO deliveries (user_id, address, position_latitude, position_longitude) VALUES (${userId}, ${address}, ${positionLatitude}, ${positionLongitude}) RETURNING *`,
+    // Line after that with [userId, address, positionLatitude, positionLongitude] could be removed.
+
     const newDelivery = await db.query(
       "INSERT INTO deliveries (user_id, address, position_latitude, position_longitude) VALUES ($1, $2, $3, $4) RETURNING *",
       [userId, address, positionLatitude, positionLongitude]
