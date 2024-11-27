@@ -49,3 +49,61 @@ src/index.html - this one should be removed. You have here a lot of code related
     }
   }
 ```
+
+## Server
+
+- Folder "config" and file "database.js" can be removed completely, because you establish connection with database in util/db-connect.js
+
+- I would rename "Controller" folder to "controllers"
+
+- deliveryController.js can be removed completely. All code here is written for MongoDB database, which you do not use here. You are working with Postgres database.
+
+- Folder "models" can be removed completely as well. There are no models in Postgres and it seems it was used for database connection with "sequelize". We do not use sequelize package in your project, so it may be deleted.
+
+- userController can be deleted completely. We use Clerk for this purpose, so you do not need it.
+- userRoutes.js can be deleted as well.
+
+- osrm-backend folder can be removed completely.
+
+- addresses.js in routes should be revised completelly. Normally you have in routes file something like this:
+
+```js
+const { getRoute } = require("../Controller/routeController");
+const router = express.Router();
+
+router.post("/route", getRoute);
+
+module.exports = router;
+```
+
+And that is. All functions should be saved in controllers and imported accordingly.
+
+- tspService in services can be deleted. OSRM API will do whole work, so we don't need it.
+
+- berlin-latest.sm.pbf can be removed as well.
+
+- There some packages that can be removed as well
+
+```json
+  },
+  "dependencies": {
+    "@clerk/clerk-sdk-node": "^5.0.66",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1", // <--- We use Clerk, so this one is not needed.
+    "bcryptjs": "^2.4.3", // <--- We use Clerk, so this one is not needed.
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
+    "leaflet": "^1.9.4", // <--- I think we need it only in client. It can be removed here.
+    "pg": "^8.13.1",
+    "postgis": "^1.0.5",
+    "react": "^18.3.1", // <--- I think we need it only in client. It can be removed here.
+    "react-leaflet": "^4.2.1", // <--- I think we need it only in client. It can be removed here.
+    "react-router-dom": "^7.0.1" // <--- I think we need it only in client. It can be removed here.
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7" // <---- You use "dev": "node --watch server.js" script, so this can be removed as well.
+  }
+```
