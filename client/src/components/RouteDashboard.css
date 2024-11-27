@@ -1,0 +1,67 @@
+/* RouteDashboard.css */
+
+/* Container for the whole dashboard */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    min-height: 100vh; /* Take full height of the viewport */
+    padding: 2rem;
+    background-color: #f4f4f4; /* Light background color */
+  }
+  
+  /* Box around the entire dashboard content */
+  .dashboard-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%; /* Width of the dashboard */
+    max-width: 1200px; /* Limit width on larger screens */
+    padding: 2rem;
+    background-color: white; /* Background color of the dashboard box */
+    border-radius: 10px; /* Rounded corners */
+    border: 2px solid #ddd; /* Light border around the box */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow around the box */
+  }
+  
+  .dashboard h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Styling for loading and error messages */
+  .dashboard .loading-message,
+  .dashboard .error-message {
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Responsive styles for tablets and smaller screens */
+  @media (max-width: 768px) {
+    .dashboard-box {
+      width: 95%;
+      padding: 1.5rem;
+    }
+  
+    .dashboard h2 {
+      font-size: 1.8rem;
+    }
+  }
+  
+  /* Responsive styles for very small devices */
+  @media (max-width: 480px) {
+    .dashboard-box {
+      width: 100%;
+      padding: 1rem;
+    }
+  
+    .dashboard h2 {
+      font-size: 1.5rem;
+    }
+  }
+  
