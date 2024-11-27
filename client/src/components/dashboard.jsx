@@ -13,9 +13,29 @@
 
 // export default RouteDashboard;
 
+// import ErrorBoundary from './ErrorBoundary';
+// import MapDisplay from './MapDisplay.jsx';
+// import TimeEstimates from'./TimeEstimates.jsx';
+// const RouteDashboard = () => {
+//   return (
+//     <div className="dashboard">
+//       <h2>Route Dashboard</h2>
+//       <ErrorBoundary>
+//         <MapDisplay />
+//       </ErrorBoundary>
+//       <TimeEstimates />
+//     </div>
+//   );
+// };
+
+// export default RouteDashboard;
+
+// ---27--11
+
 import ErrorBoundary from './ErrorBoundary';
-import MapDisplay from './MapDisplay';
-import TimeEstimates from'./TimeEstimates';
+import MapDisplay from './MapDisplay.jsx';
+import TimeEstimates from './TimeEstimates.jsx';
+
 const RouteDashboard = () => {
   return (
     <div className="dashboard">
