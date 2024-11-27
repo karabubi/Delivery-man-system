@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // <-- It is not used. It would be better to delete it
 
 const AddressList = () => {
   const [addresses, setAddresses] = useState([]);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // <-- It is not used. It would be better to delete it
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -30,7 +30,9 @@ const AddressList = () => {
       <ul>
         {/* Using .map() to iterate over the addresses */}
         {addresses.map((address, index) => (
-          <li key={index}> {/* Each list item needs a unique key */}
+          <li key={index}>
+            {" "}
+            {/* Each list item needs a unique key */}
             <div>
               <strong>Address:</strong> {address.address} <br />
               <strong>Latitude:</strong> {address.latitude} <br />
