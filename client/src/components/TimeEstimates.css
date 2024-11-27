@@ -1,105 +1,111 @@
+#map {
+  height: 400px;
+}
+
+.leaflet-container {
+  height: 100%;
+}
 /* TimeEstimates.css */
 
 /* Main container for the time estimates component */
 .time-estimates {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Take full height of the viewport */
-    padding: 2rem;
-    background-color: #f4f4f4; /* Light background color */
-  }
-  
-  /* Box around the time estimates content */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Take full height of the viewport */
+  padding: 2rem;
+  background-color: #f4f4f4; /* Light background color */
+}
+
+/* Box around the time estimates content */
+.time-estimates-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 80%;
+  max-width: 1200px;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.time-estimates h3 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.time-estimates ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.time-estimates ul li {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0.5rem 0;
+}
+
+/* Loading and error message */
+.loading-message {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 1rem 0;
+}
+
+/* Map container box style */
+.map-container-box {
+  width: 100%;
+  height: 400px;
+  margin-top: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive styles for smaller screens (tablets) */
+@media (max-width: 768px) {
   .time-estimates-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 80%;
-    max-width: 1200px;
-    padding: 2rem;
-    background-color: white;
-    border-radius: 10px;
-    border: 2px solid #ddd;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    width: 95%; /* Make the box take more space on smaller screens */
+    padding: 1.5rem;
   }
-  
+
   .time-estimates h3 {
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 1rem;
-  }
-  
-  .time-estimates ul {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 1rem;
-  }
-  
-  .time-estimates ul li {
-    font-size: 1.2rem;
-    color: #333;
-    margin: 0.5rem 0;
-  }
-  
-  /* Loading and error message */
-  .loading-message {
     font-size: 1.5rem;
-    color: #333;
-    margin: 1rem 0;
   }
-  
-  /* Map container box style */
+
+  .time-estimates ul li {
+    font-size: 1rem;
+  }
+
   .map-container-box {
+    height: 300px; /* Reduce map height on smaller screens */
+  }
+}
+
+/* Responsive styles for very small screens (mobiles) */
+@media (max-width: 480px) {
+  .time-estimates-box {
     width: 100%;
-    height: 400px;
-    margin-top: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
   }
-  
-  /* Responsive styles for smaller screens (tablets) */
-  @media (max-width: 768px) {
-    .time-estimates-box {
-      width: 95%; /* Make the box take more space on smaller screens */
-      padding: 1.5rem;
-    }
-  
-    .time-estimates h3 {
-      font-size: 1.5rem;
-    }
-  
-    .time-estimates ul li {
-      font-size: 1rem;
-    }
-  
-    .map-container-box {
-      height: 300px; /* Reduce map height on smaller screens */
-    }
+
+  .time-estimates h3 {
+    font-size: 1.25rem;
   }
-  
-  /* Responsive styles for very small screens (mobiles) */
-  @media (max-width: 480px) {
-    .time-estimates-box {
-      width: 100%;
-      padding: 1rem;
-    }
-  
-    .time-estimates h3 {
-      font-size: 1.25rem;
-    }
-  
-    .time-estimates ul li {
-      font-size: 0.9rem;
-    }
-  
-    .map-container-box {
-      height: 250px; /* Further reduce map height */
-    }
+
+  .time-estimates ul li {
+    font-size: 0.9rem;
   }
-  
+
+  .map-container-box {
+    height: 250px; /* Further reduce map height */
+  }
+}

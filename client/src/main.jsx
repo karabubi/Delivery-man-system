@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AddressList from "./components/AddressList";
-import RoutDashboard from "./components/dashboard.jsx";
+import RouteDashboard from "./components/dashboard.jsx";
 import DeliveryManagement from "./components/DeliveryManagement.jsx";
 import Home from "./pages/Home.jsx";
 
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <RoutDashboard />,
+        element: <RouteDashboard />,
       },
       {
         path: "manage",

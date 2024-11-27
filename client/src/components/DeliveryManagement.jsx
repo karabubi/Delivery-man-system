@@ -58,7 +58,6 @@
 
 // export default DeliveryManagement;
 
-
 // import { useState } from 'react';
 // import axios from 'axios';
 // import MapDisplay from './MapDisplay';
@@ -100,8 +99,6 @@
 // };
 
 // export default DeliveryManagement;
-
-
 
 // import { useState } from 'react';
 // import axios from 'axios';
@@ -163,35 +160,35 @@
 
 // export default DeliveryManagement;
 
-
-
-import { useState } from 'react';
-import axios from 'axios';
-import MapDisplay from './MapDisplay';
+import { useState } from "react";
+import axios from "axios";
+import MapDisplay from "./MapDisplay";
 
 const DeliveryManagement = () => {
   const [deliveries, setDeliveries] = useState([]);
-  const [address, setAddress] = useState('');
-  const [error, setError] = useState('');
+  const [address, setAddress] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Function to add a new delivery
   const addDelivery = async () => {
     if (!address.trim()) {
-      setError('Address cannot be empty.');
+      setError("Address cannot be empty.");
       return;
     }
 
     try {
       setLoading(true);
-      const response = await axios.post('http://localhost:3000/api/delivery', { address });
+      const response = await axios.post("http://localhost:3000/api/delivery", {
+        address,
+      });
       const newDelivery = response.data.delivery;
-console.log(address)
+      console.log(address);
       setDeliveries((prev) => [...prev, newDelivery]);
-      setAddress('');
-      setError('');
+      setAddress("");
+      setError("");
     } catch (err) {
-      setError('Error adding delivery');
+      setError("Error adding delivery");
     } finally {
       setLoading(false);
     }
@@ -208,7 +205,7 @@ console.log(address)
         placeholder="Enter delivery address"
       />
       <button onClick={addDelivery} disabled={loading}>
-        {loading ? 'Adding...' : 'Add Delivery'}
+        {loading ? "Adding..." : "Add Delivery"}
       </button>
       <MapDisplay deliveries={deliveries} />
     </div>
