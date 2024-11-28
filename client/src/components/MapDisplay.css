@@ -13,7 +13,7 @@
   
   /* Boxed container around the map */
   .map-box {
-    width: 80%; /* Set the width of the map container */
+    width: 100%; /* Set the width of the map container */
     max-width: 1200px; /* Max width for larger screens */
     height: 600px; /* Fixed height for the map */
     border: 2px solid #ccc; /* Light border around the map */
@@ -44,7 +44,7 @@
   @media (max-width: 480px) {
     .map-box {
       width: 100%; /* Full width on very small screens */
-      height: 300px; /* Further reduce height */
+      height: 400px; /* Further reduce height */
     }
   
     .map-container .loading-message {

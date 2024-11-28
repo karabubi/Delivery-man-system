@@ -57,3 +57,7 @@ INSERT INTO vertices (address, geom) VALUES
 ('Josefstraße 48', ST_SetSRID(ST_MakePoint(7.095761, 50.731562), 4326)),
 ('Am Hof 49', ST_SetSRID(ST_MakePoint(7.099812, 50.735873), 4326)),
 ('Brüderstraße 50', ST_SetSRID(ST_MakePoint(7.099124, 50.735341), 4326));
+
+
+-- Select all data from vertices table 
+SELECT * FROM vertices;
