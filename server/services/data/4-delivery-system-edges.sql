@@ -116,3 +116,15 @@ VALUES
         (SELECT geom FROM vertices WHERE id = 50),
         (SELECT geom FROM vertices WHERE id = 49)
     ));
+
+
+
+CREATE EXTENSION IF NOT EXISTS pgrouting;
+
+-- Example shortest path query between location 1 and location 10
+SELECT * FROM pgr_dijkstra(
+    'SELECT id, source, target, cost FROM edges',  -- edge table query
+    1,  -- start location id (replace with actual source location id)
+    10, -- end location id (replace with actual target location id)
+    directed := false  -- whether the graph is directed
+);

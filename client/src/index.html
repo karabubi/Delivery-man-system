@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Routing with OpenStreetMap</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #map { height: 600px; }
     </style>
@@ -16,7 +16,7 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
         // Initialize the map
-        const map = L.map('map').setView([50.73743, 7.098206], 13); // Set initial position (e.g., one of the cities)
+        const map = L.map('map').setView([50.73743, 7.098206], 14); // Set initial position (e.g., one of the cities)
 
         // Set OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -36,7 +36,7 @@
 
                     // Example: Replace this with actual database queries or predefined coordinates
                     const sourceCoords = [50.73743, 7.098206]; // Example coordinates (City 1)
-                    const targetCoords = [50.735887, 7.101445]; // Example coordinates (City 2)
+                    //const targetCoords = [50.735887, 7.101445]; // Example coordinates (City 2)
 
                     latlngs.push([sourceCoords, targetCoords]);
                 });

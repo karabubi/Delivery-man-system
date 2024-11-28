@@ -61,3 +61,8 @@ INSERT INTO locations (address, latitude, longitude) VALUES
 ('Am Hof 49', 50.735873, 7.099812),
 ('Brüderstraße 50', 50.735341, 7.099124);
 
+
+
+-- Select all data from locations table
+--SELECT * FROM locations;
+SELECT latitude, longitude FROM locations;
