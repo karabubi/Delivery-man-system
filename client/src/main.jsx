@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AddressList from "./components/AddressList";
-import RouteDashboard from "./components/dashboard.jsx";
+import RouteDashboard from "./components/Dashboard.jsx";
 import DeliveryManagement from "./components/DeliveryManagement.jsx";
 import Home from "./pages/Home.jsx";
 
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         element: <AddressList />,
       },
       {
-        path: "dashboard",
+        path: "Dashboard",
         element: <RouteDashboard />,
       },
       {

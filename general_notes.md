@@ -6,7 +6,7 @@
 
 - ErrorBoundary.jsx may be deleted completely. It is class component, which is old and not used anymore.
 
-- It is better to write all components name with the capital letter. I would suggest to rename dashboard.jsx to Dashboard.jsx
+- It is better to write all components name with the capital letter. I would suggest to rename Dashboard.jsx to Dashboard.jsx
 
 - You have a lot of comments in code. In general it's recommended to have comments only when absolutely necessary and no one understands what's going on here without the comment. If it is not the case, I would remove comments.
 
