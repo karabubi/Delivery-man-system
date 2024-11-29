@@ -1,6 +1,4 @@
 
-
-
 import './Home.css'; // Import the Home CSS for styling
 
 const Home = () => {
