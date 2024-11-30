@@ -1,12 +1,3 @@
-#map {
-  height: 500px;
-  width: 500px;
-}
-
-.leaflet-container {
-  height: 100%;
-  width: 100%;
-}
 /* TimeEstimates.css */
 
 /* Main container for the time estimates component */
@@ -26,32 +17,35 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 80%;
-  max-width: 1200px;
+  width: 90%;
+  max-width: 800px;
   padding: 2rem;
   background-color: white;
-  border-radius: 10px;
-  border: 2px solid #ddd;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.time-estimates h3 {
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 1rem;
-}
-
-.time-estimates ul {
-  list-style-type: none;
-  padding: 0;
-  margin-bottom: 1rem;
-}
-
-.time-estimates ul li {
+/* Route information summary */
+.summary-box {
+  margin-bottom: 2rem;
   font-size: 1.2rem;
   color: #333;
+}
+
+/* List of ordered locations */
+.locations-list {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+}
+
+.locations-list li {
+  background-color: #f9f9f9;
   margin: 0.5rem 0;
+  padding: 2rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgb(214, 195, 195);
+  text-align: left;
 }
 
 /* Loading and error message */
@@ -79,12 +73,13 @@
     padding: 1.5rem;
   }
 
-  .time-estimates h3 {
-    font-size: 1.5rem;
+  .summary-box {
+    font-size: 1rem;
   }
 
-  .time-estimates ul li {
+  .locations-list li {
     font-size: 1rem;
+    padding: 0.8rem;
   }
 
   .map-container-box {
@@ -99,12 +94,13 @@
     padding: 1rem;
   }
 
-  .time-estimates h3 {
-    font-size: 1.25rem;
+  .summary-box {
+    font-size: 0.9rem;
   }
 
-  .time-estimates ul li {
+  .locations-list li {
     font-size: 0.9rem;
+    padding: 0.6rem;
   }
 
   .map-container-box {
