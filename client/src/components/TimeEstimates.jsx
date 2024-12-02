@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
@@ -11,6 +10,7 @@ const TimeEstimates = () => {
   const [error, setError] = useState(null);
   const [locations, setLocations] = useState([]);
 
+  // Fetch delivery locations from the server
   useEffect(() => {
     const fetchLocations = async () => {
       try {
@@ -20,7 +20,20 @@ const TimeEstimates = () => {
           lat: delivery.position_latitude,
           lng: delivery.position_longitude,
         }));
-        setLocations(fetchedLocations);
+
+        // Log fetched locations for debugging
+        console.log("Fetched Locations:", fetchedLocations);
+
+        // Ensure the data is valid before setting state
+        const validLocations = fetchedLocations.filter(
+          (loc) => loc.lat && loc.lng
+        );
+
+        if (validLocations.length === 0) {
+          throw new Error("No valid locations found.");
+        }
+
+        setLocations(validLocations);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching delivery locations:", error);
@@ -32,11 +45,16 @@ const TimeEstimates = () => {
     fetchLocations();
   }, []);
 
+  // Fetch route data from the server when locations are available
   useEffect(() => {
     const fetchRouteData = async () => {
       if (locations.length < 2) return;
+
       try {
         const response = await axios.post("http://localhost:3000/api/best-route", { locations });
+
+        // Log the route data for debugging
+        console.log("Route Data:", response.data);
 
         if (response.data && response.data.geometry && response.data.geometry.coordinates) {
           setTimeData(response.data);
@@ -99,7 +117,7 @@ const TimeEstimates = () => {
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {locations.map((loc, index) => (
             <Marker key={index} position={[loc.lat, loc.lng]}>
-              <Popup>{`Location ${index + 1}`}</Popup>
+              <Popup>{`Location ${index + 1}: ${loc.address}`}</Popup>
             </Marker>
           ))}
           <Polyline positions={route} color="blue" />
