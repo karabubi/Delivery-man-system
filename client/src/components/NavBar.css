@@ -67,14 +67,13 @@
 /* Logout button styling (if present) */
 .navbar-signout button {
   border: none; /* Remove border */
-  background-color: #dc3545; /* Red button */
+  background-color: #d73d12; /* Red button */
   color: white; /* White text */
   padding: 0.5rem 1rem; /* Add padding inside the button */
   border-radius: 5px; /* Rounded corners */
   font-size: 1rem; /* Button font size */
   cursor: pointer; /* Pointer cursor for button */
 }
-
 /* Hover effect for the logout button */
 .navbar-signout button:hover {
   background-color: #c82333; /* Darker red on hover */

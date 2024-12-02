@@ -59,7 +59,17 @@ INSERT INTO locations (address, latitude, longitude) VALUES
 ('Rathausgasse 47', 50.735923, 7.098423),
 ('Josefstraße 48', 50.731562, 7.095761),
 ('Am Hof 49', 50.735873, 7.099812),
-('Brüderstraße 50', 50.735341, 7.099124);
+('Brüderstraße 50', 50.735341, 7.099124),
+('Kurfürstendamm 2', 52.507798, 13.331307),
+('Olympiastadion 30', 52.514568, 13.239502),
+('Schloss Bellevue 4', 52.514344, 13.352838),
+('Charlottenburg 34', 52.520273, 13.351339),
+('Unter den Linden 9', 52.514678, 13.381777),
+('Siegessäule 6', 52.514404, 13.350419),
+('Tempelhofer Feld 4', 52.474604, 13.403732),
+('Bebelplatz 5', 52.517273, 13.394619),
+('Berlin Hauptbahnhof 2', 52.525687, 13.369474),
+('Berlin Zoo 6', 52.508404, 13.337835);
 
 
 

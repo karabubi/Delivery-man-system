@@ -11,6 +11,7 @@ const TimeEstimates = () => {
   const [error, setError] = useState(null);
   const [locations, setLocations] = useState([]);
 
+  // Fetch locations from the backend
   useEffect(() => {
     const fetchLocations = async () => {
       try {
@@ -20,7 +21,19 @@ const TimeEstimates = () => {
           lat: delivery.position_latitude,
           lng: delivery.position_longitude,
         }));
-        setLocations(fetchedLocations);
+
+        // Filter out invalid locations (with null or undefined lat/lng)
+        const validLocations = fetchedLocations.filter(
+          (location) => location.lat != null && location.lng != null
+        );
+
+        // Only set locations if there are 2 or more valid locations
+        if (validLocations.length >= 2) {
+          setLocations(validLocations);
+        } else {
+          setError("Not enough valid locations.");
+        }
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching delivery locations:", error);
@@ -32,15 +45,28 @@ const TimeEstimates = () => {
     fetchLocations();
   }, []);
 
+  // Fetch best route data from the backend
   useEffect(() => {
     const fetchRouteData = async () => {
-      if (locations.length < 2) return;
+      if (locations.length < 2) return; // Ensure at least 2 locations are available for route calculation
       try {
-        const response = await axios.post("http://localhost:3000/api/best-route", { locations });
+        const response = await axios.post(
+          "http://localhost:3000/api/best-route",
+          { locations }
+        );
 
-        if (response.data && response.data.geometry && response.data.geometry.coordinates) {
+        if (
+          response.data &&
+          response.data.geometry &&
+          response.data.geometry.coordinates
+        ) {
           setTimeData(response.data);
-          setRoute(response.data.geometry.coordinates.map(coord => [coord[1], coord[0]]));
+          setRoute(
+            response.data.geometry.coordinates.map((coord) => [
+              coord[1],
+              coord[0],
+            ])
+          );
         } else {
           throw new Error("Route data is invalid or incomplete.");
         }
@@ -80,13 +106,14 @@ const TimeEstimates = () => {
               </div>
               {index < timeData.orderedLocations.length - 1 && (
                 <div>
-                  <strong>Estimated Time:</strong> {location.estimatedTime ? location.estimatedTime : "-"}
+                  <strong>Estimated Time:</strong> 
+                  <span>{location.estimatedTime ? location.estimatedTime : "-"}</span>
                 </div>
               )}
               {index < timeData.orderedLocations.length - 1 && (
                 <div>
-                  <strong>From {location.address} to {timeData.orderedLocations[index + 1].address}:</strong>
-                  <span> {location.estimatedTime ? location.estimatedTime : "-"} </span>
+                  <strong>From {location.address} to {timeData.orderedLocations[index + 1].address}:</strong> 
+                  <span>{location.estimatedTime ? location.estimatedTime : "-"}</span>
                 </div>
               )}
             </li>
@@ -95,11 +122,15 @@ const TimeEstimates = () => {
       </div>
 
       <div className="map-container-box">
-        <MapContainer center={[50.73743, 7.098206]} zoom={13} style={{ height: "100%", width: "800px" }}>
+        <MapContainer
+          center={[50.73743, 7.098206]}
+          zoom={13}
+          style={{ height: "100%", width: "100%" }}
+        >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {locations.map((loc, index) => (
             <Marker key={index} position={[loc.lat, loc.lng]}>
-              <Popup>{`Location ${index + 1}`}</Popup>
+              <Popup>{`Location ${index + 1}: ${loc.address}`}</Popup>
             </Marker>
           ))}
           <Polyline positions={route} color="blue" />
