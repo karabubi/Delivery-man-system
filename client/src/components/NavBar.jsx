@@ -25,8 +25,8 @@ const NavBar = () => {
           Home
         </Link>
         {!isSignedIn ? (
-          <>
-            <SignInButton />
+           <>
+          <SignInButton/>
           </>
         ) : (
           <>
@@ -38,8 +38,9 @@ const NavBar = () => {
             </Link>
             <Link to="/manage" className="nav-link">
               Delivery Management
-              </Link>
-            <UserButton></UserButton>
+            </Link>
+            <UserButton ></UserButton >
+            
           </>
         )}
       </div>

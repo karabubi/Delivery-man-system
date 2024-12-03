@@ -1,3 +1,4 @@
+
 /* Navigation bar container */
 .navbar {
   display: flex; /* Use flexbox for layout */
@@ -13,10 +14,11 @@
   width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
   box-sizing: border-box;
-}
-
-/* Overlay effect for better readability (optional) */
-.navbar::before {
+ }
+ 
+ 
+ /* Overlay effect for better readability (optional) */
+ .navbar::before {
   content: '';
   position: absolute;
   top: 0;
@@ -25,28 +27,32 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.3); /* Semi-transparent dark overlay */
   z-index: 2; /* Ensure it stays behind the text */
-}
-
-/* Delivery System text on the left */
-.navbar-left p {
+ }
+ 
+ 
+ /* Delivery System text on the left */
+ .navbar-left p {
   margin: 0; /* Remove default margin */
   font-size: 1.5rem; /* Font size for the text */
   font-weight: bold; /* Bold text */
   color:rgb(15, 14, 14); /* White text color for contrast */
   z-index: 2; /* Ensure text is on top of the overlay */
-}
-
-/* Links container on the right */
-.navbar-links {
+ }
+ 
+ 
+ /* Links container on the right */
+ .navbar-links {
   display: flex; /* Use flexbox for links */
   gap: 1rem; /* Add space between links */
   z-index: 2; /* Ensure links are on top of the overlay */
   align-items: center; /* Center links vertically */
   margin-left: auto; /* Push links to the right */
-}
-
-/* Links styling */
-.navbar-links .nav-link {
+  box-sizing: border-box;
+ }
+ 
+ 
+ /* Links styling */
+ .navbar-links .nav-link {
   text-decoration: none; /* Remove underline */
   color: white; /* White link color */
   font-size: 1rem; /* Font size for links */
@@ -56,16 +62,18 @@
   display: inline-block; /* Ensure links have the same height/width */
   text-align: center; /* Center text inside the links */
   min-width: 100px; /* Set a consistent width for all links */
-}
-
-/* Hover effect for links */
-.navbar-links .nav-link:hover {
+ }
+ 
+ 
+ /* Hover effect for links */
+ .navbar-links .nav-link:hover {
   background-color: #007bff; /* Blue background on hover */
   color: white; /* Keep the text white on hover */
-}
-
-/* Logout button styling (if present) */
-.navbar-signout button {
+ }
+ 
+ 
+ /* Logout button styling (if present) */
+ .navbar-signout button {
   border: none; /* Remove border */
   background-color: #d73d12; /* Red button */
   color: white; /* White text */
@@ -73,49 +81,60 @@
   border-radius: 5px; /* Rounded corners */
   font-size: 1rem; /* Button font size */
   cursor: pointer; /* Pointer cursor for button */
-}
-/* Hover effect for the logout button */
-.navbar-signout button:hover {
+ }
+ /* Hover effect for the logout button */
+ .navbar-signout button:hover {
   background-color: #c82333; /* Darker red on hover */
-}
-
-/* Responsive Styling */
-@media (max-width: 768px) {
+ }
+ 
+ 
+ /* Responsive Styling */
+ @media (max-width: 768px) {
   .navbar {
       height: 300px; /* Reduce navbar height on smaller screens */
       padding: 1rem; /* Adjust padding */
   }
-
+ 
+ 
   .navbar-left p {
       font-size: 1.25rem; /* Reduce font size of text */
   }
-
+ 
+ 
   .navbar-links .nav-link {
       font-size: 0.9rem; /* Reduce font size of links */
       min-width: 80px; /* Adjust link size */
   }
-
+ 
+ 
   .navbar-links {
       gap: 0.8rem; /* Reduce gap between links */
   }
-}
-
-/* For very small devices like phones in portrait mode */
-@media (max-width: 480px) {
+ }
+ 
+ 
+ /* For very small devices like phones in portrait mode */
+ @media (max-width: 480px) {
   .navbar {
       height: 200px; /* Further reduce navbar height */
   }
-
+ 
+ 
   .navbar-left p {
       font-size: 1rem; /* Further reduce font size of text */
   }
-
+ 
+ 
   .navbar-links .nav-link {
       font-size: 0.8rem; /* Further reduce font size of links */
       min-width: 70px; /* Adjust link size */
   }
-
+ 
+ 
   .navbar-links {
-      gap: 0.5rem; /* Reduce gap between links further */
+      gap: 1.5rem; /* Reduce gap between links further */
   }
-}
+ }
+ 
+ 
+ 
