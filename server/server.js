@@ -89,6 +89,7 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
     .on("end", async () => {
       try {
         await db("deliveries").insert(deliveries);
+        console.log(deliveries)
         res.status(200).json({ message: "CSV file processed and data saved." });
       } catch (err) {
         console.error("Error inserting CSV data:", err.message);
@@ -122,15 +123,13 @@ app.post("/api/best-route", async (req, res) => {
   }
 
   // Validate coordinates: ensure no null lat/lng
+
   const validLocations = locations.filter((loc) => loc.lat && loc.lng);
 
   if (validLocations.length < 2) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "Invalid locations. All locations must have valid lat/lng values.",
-      });
+    return res.status(400).json({
+      error: "Invalid locations. All locations must have valid lat/lng values.",
+    });
   }
 
   // Format coordinates for OSRM API
@@ -142,18 +141,21 @@ app.post("/api/best-route", async (req, res) => {
   const apiUrl = `${osrmBaseUrl}/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
 
   // Check if the response has valid routes
-  if (
-    !response.data ||
-    !response.data.routes ||
-    response.data.routes.length === 0
-  ) {
-    console.error("No route found in OSRM response:", response.data);
-    return res.status(404).json({ error: "No route found." });
-  }
 
   try {
     const response = await axios.get(apiUrl);
 
+    if (
+      !response.data ||
+      !response.data.routes ||
+      response.data.routes.length === 0
+    ) {
+      console.error("No route found in OSRM response:", response.data);
+      return res.status(404).json({ error: "No route found." });
+    }
+
+    const route = response.data.routes[0];
+    const { distance, duration, geometry, legs } = route;
     // Convert duration to hours and minutes
     const hours = Math.floor(duration / 3600);
     const minutes = Math.floor((duration % 3600) / 60);
@@ -242,59 +244,8 @@ app.delete("/api/delivery/:id", async (req, res) => {
   }
 });
 
-//    console.log("OSRM Response:", JSON.stringify(response.data, null, 2));
 
-//    if (!response.data || !response.data.routes || response.data.routes.length === 0) {
-//      console.error("No route found in OSRM response:", response.data);
-//      return res.status(404).json({ error: "No route found." });
-//    }
 
-//    const route = response.data.routes[0];
-//    const { distance, duration, geometry, legs } = route;
-
-//    console.log("Route Legs:", JSON.stringify(legs, null, 2)); // Log legs for debugging
-
-//    const hours = Math.floor(duration / 3600);
-//    const minutes = Math.floor((duration % 3600) / 60);
-//    const durationFormatted = `${hours} hours and ${minutes} minutes`;
-
-//    const orderedLocations = legs.map((leg, index) => {
-//      const startLocation = leg.steps[0]?.maneuver?.location || [];
-//      const endLocation = leg.steps[leg.steps.length - 1]?.maneuver?.location || [];
-
-//      console.log(`Leg ${index} Start Location:`, startLocation); // Debugging
-//      console.log(`Leg ${index} End Location:`, endLocation); // Debugging
-
-//      return {
-//        address: locations[index]?.address || "Unknown",
-//        latitude: startLocation[1] || 0, // Assuming [lng, lat] format
-//        longitude: startLocation[0] || 0, // Assuming [lng, lat] format
-//        estimatedTime: `${Math.floor(leg.duration / 60)} minutes`,
-//      };
-//    });
-
-//    const finalLeg = legs[legs.length - 1];
-//    const finalEndLocation = finalLeg.steps[finalLeg.steps.length - 1]?.maneuver?.location || [];
-//    const finalDestination = {
-//      address: locations[locations.length - 1]?.address || "Unknown",
-//      latitude: finalEndLocation[1] || 0, // Assuming [lng, lat] format
-//      longitude: finalEndLocation[0] || 0, // Assuming [lng, lat] format
-//      estimatedTime: null,
-//    };
-//    orderedLocations.push(finalDestination);
-
-//    res.status(200).json({
-//      distance: (distance / 1000).toFixed(2),
-//      duration: durationFormatted,
-//      orderedLocations,
-//      geometry,
-//    });
-//  } catch (err) {
-//    console.error("Error calculating route:", err.message);
-//    res.status(500).json({ error: "Failed to calculate route", details: err.message });
-//  }
-// });
-
-// app.listen(PORT, () => {
-//  console.log(`Server running at http://localhost:${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});

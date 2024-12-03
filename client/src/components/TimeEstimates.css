@@ -17,11 +17,20 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 90%;
-  max-width: 800px;
+  width: 100%;
+  max-width: 900px;
   padding: 2rem;
   background-color: white;
   text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styling */
+.time-estimates-box h3 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  color: #333;
 }
 
 /* Route information summary */
@@ -29,6 +38,12 @@
   margin-bottom: 2rem;
   font-size: 1.2rem;
   color: #333;
+}
+
+/* Styled details (Total Travel Time, Distance) */
+.summary-box div {
+  margin: 0.5rem 0;
+  font-weight: 500;
 }
 
 /* List of ordered locations */
@@ -40,12 +55,24 @@
 
 .locations-list li {
   background-color: #f9f9f9;
-  margin: 0.5rem 0;
-  padding: 2rem;
+  margin: 1rem 0;
+  padding: 1rem;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 2px solid rgb(214, 195, 195);
+  border: 2px solid #d6c3c3;
   text-align: left;
+}
+
+.locations-list li div {
+  margin-bottom: 0.5rem;
+}
+
+.locations-list li strong {
+  color: #007bff;
+}
+
+.locations-list li span {
+  color: #555;
 }
 
 /* Loading and error message */
@@ -79,10 +106,11 @@
 
   .locations-list li {
     font-size: 1rem;
+    padding: 1rem;
   }
 
   .map-container-box {
-    height: 300px; /* Reduce map height on smaller screens */
+    height: 350px; /* Reduce map height on smaller screens */
   }
 }
 
@@ -99,7 +127,7 @@
 
   .locations-list li {
     font-size: 0.9rem;
-    padding: 0.2rem;
+    padding: 0.8rem;
   }
 
   .map-container-box {
