@@ -38,11 +38,7 @@ const NavBar = () => {
             </Link>
             <Link to="/manage" className="nav-link">
               Delivery Management
-            </Link>
-            <Link to="/map" className="nav-link">
-              Map View
-            </Link>
-
+              </Link>
             <UserButton></UserButton>
           </>
         )}

@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  Popup,
+} from "react-leaflet";
 import "./TimeEstimates.css";
 
 const TimeEstimates = () => {
@@ -45,20 +51,27 @@ const TimeEstimates = () => {
     fetchLocations();
   }, []);
 
-  // Fetch route data from the server when locations are available
+  // Fetch best route data from the backend
   useEffect(() => {
     const fetchRouteData = async () => {
-      if (locations.length < 2) return;
-
+      if (locations.length < 2) return; // Ensure at least 2 locations are available for route calculation
       try {
-        const response = await axios.post("http://localhost:3000/api/best-route", { locations });
+        const response = await axios.post(
+          "http://localhost:3000/api/best-route",
+          { locations }
+        );
 
         // Log the route data for debugging
         console.log("Route Data:", response.data);
 
         if (response.data && response.data.geometry && response.data.geometry.coordinates) {
           setTimeData(response.data);
-          setRoute(response.data.geometry.coordinates.map(coord => [coord[1], coord[0]]));
+          setRoute(
+            response.data.geometry.coordinates.map((coord) => [
+              coord[1],
+              coord[0],
+            ])
+          );
         } else {
           throw new Error("Route data is invalid or incomplete.");
         }
@@ -98,13 +111,21 @@ const TimeEstimates = () => {
               </div>
               {index < timeData.orderedLocations.length - 1 && (
                 <div>
-                  <strong>Estimated Time:</strong> {location.estimatedTime ? location.estimatedTime : "-"}
+                  <strong>Estimated Time:</strong>
+                  <span>
+                    {location.estimatedTime ? location.estimatedTime : "-"}
+                  </span>
                 </div>
               )}
               {index < timeData.orderedLocations.length - 1 && (
                 <div>
-                  <strong>From {location.address} to {timeData.orderedLocations[index + 1].address}:</strong>
-                  <span> {location.estimatedTime ? location.estimatedTime : "-"} </span>
+                  <strong>
+                    From {location.address} to{" "}
+                    {timeData.orderedLocations[index + 1].address}:
+                  </strong>
+                  <span>
+                    {location.estimatedTime ? location.estimatedTime : "-"}
+                  </span>
                 </div>
               )}
             </li>
@@ -113,7 +134,11 @@ const TimeEstimates = () => {
       </div>
 
       <div className="map-container-box">
-        <MapContainer center={[50.73743, 7.098206]} zoom={13} style={{ height: "100%", width: "800px" }}>
+        <MapContainer
+          center={[50.73743, 7.098206]}
+          zoom={13}
+          style={{ height: "100%", width: "100%" }}
+        >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {locations.map((loc, index) => (
             <Marker key={index} position={[loc.lat, loc.lng]}>
