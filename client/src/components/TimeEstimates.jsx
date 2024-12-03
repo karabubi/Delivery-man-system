@@ -16,7 +16,7 @@ const TimeEstimates = () => {
   const [error, setError] = useState(null);
   const [locations, setLocations] = useState([]);
 
-  // Fetch locations from the backend
+  // Fetch delivery locations from the server
   useEffect(() => {
     const fetchLocations = async () => {
       try {
@@ -27,18 +27,19 @@ const TimeEstimates = () => {
           lng: delivery.position_longitude,
         }));
 
-        // Filter out invalid locations (with null or undefined lat/lng)
+        // Log fetched locations for debugging
+        console.log("Fetched Locations:", fetchedLocations);
+
+        // Ensure the data is valid before setting state
         const validLocations = fetchedLocations.filter(
-          (location) => location.lat != null && location.lng != null
+          (loc) => loc.lat && loc.lng
         );
 
-        // Only set locations if there are 2 or more valid locations
-        if (validLocations.length >= 2) {
-          setLocations(validLocations);
-        } else {
-          setError("Not enough valid locations.");
+        if (validLocations.length === 0) {
+          throw new Error("No valid locations found.");
         }
 
+        setLocations(validLocations);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching delivery locations:", error);
@@ -60,11 +61,10 @@ const TimeEstimates = () => {
           { locations }
         );
 
-        if (
-          response.data &&
-          response.data.geometry &&
-          response.data.geometry.coordinates
-        ) {
+        // Log the route data for debugging
+        console.log("Route Data:", response.data);
+
+        if (response.data && response.data.geometry && response.data.geometry.coordinates) {
           setTimeData(response.data);
           setRoute(
             response.data.geometry.coordinates.map((coord) => [
