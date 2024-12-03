@@ -166,15 +166,15 @@ app.post("/api/best-route", async (req, res) => {
       const startLocation = leg.steps[0]?.maneuver?.location || [];
       const endLocation =
         leg.steps[leg.steps.length - 1]?.maneuver?.location || [];
+        const adjustedDuration = leg.duration + 900;
 
       return {
         address: validLocations[index]?.address || "Unknown",
         latitude: startLocation[1] || 0,
         longitude: startLocation[0] || 0,
-        estimatedTime: `${Math.floor(leg.duration / 60)} minutes`,
+        estimatedTime: `${Math.floor(adjustedDuration / 60)} minutes`,
       };
     });
-
     // Add the final destination location
     const finalLeg = legs[legs.length - 1];
     const finalEndLocation =
