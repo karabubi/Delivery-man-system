@@ -1,7 +1,12 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  Popup,
+} from "react-leaflet";
 import "./TimeEstimates.css";
 
 const TimeEstimates = () => {
@@ -106,14 +111,21 @@ const TimeEstimates = () => {
               </div>
               {index < timeData.orderedLocations.length - 1 && (
                 <div>
-                  <strong>Estimated Time:</strong> 
-                  <span>{location.estimatedTime ? location.estimatedTime : "-"}</span>
+                  <strong>Estimated Time:</strong>
+                  <span>
+                    {location.estimatedTime ? location.estimatedTime : "-"}
+                  </span>
                 </div>
               )}
               {index < timeData.orderedLocations.length - 1 && (
                 <div>
-                  <strong>From {location.address} to {timeData.orderedLocations[index + 1].address}:</strong> 
-                  <span>{location.estimatedTime ? location.estimatedTime : "-"}</span>
+                  <strong>
+                    From {location.address} to{" "}
+                    {timeData.orderedLocations[index + 1].address}:
+                  </strong>
+                  <span>
+                    {location.estimatedTime ? location.estimatedTime : "-"}
+                  </span>
                 </div>
               )}
             </li>
