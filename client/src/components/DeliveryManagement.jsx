@@ -4,83 +4,83 @@ import axios from "axios";
 import "./DeliveryManagement.css";
 
 const DeliveryManagement = () => {
-  const [deliveries, setDeliveries] = useState([]);  // Stores the list of deliveries
-  const [error, setError] = useState("");           // Stores error messages
-  const [loading, setLoading] = useState(false);    // Loading state for file upload
+  const [deliveries, setDeliveries] = useState([]); 
+  const [error, setError] = useState("");           
+  const [loading, setLoading] = useState(false);    
 
   // Fetch deliveries when the component loads
   useEffect(() => {
     const fetchDeliveries = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/delivery");
-        setDeliveries(response.data);  // Store deliveries in state
+        setDeliveries(response.data);  
       } catch (err) {
-        setError("Error fetching deliveries");  // Display error if the fetch fails
+        setError("Error fetching deliveries");  
       }
     };
 
-    fetchDeliveries();  // Call the function to fetch data on load
+    fetchDeliveries();  
   }, []);
 
   // Handle CSV upload
   const handleFileUpload = async (e) => {
-    const file = e.target.files[0];  // Get the file selected by the user
+    const file = e.target.files[0];  
     if (!file) {
       setError("Please upload a CSV file.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("file", file);  // Attach the file to FormData
+    formData.append("file", file);  
 
     try {
-      setLoading(true);  // Set loading to true while uploading
+      setLoading(true);  
       const response = await axios.post("http://localhost:3000/api/upload-csv", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       // Handle the response from the server
       if (response.status === 200) {
-        setError("");  // Clear error after successful upload
-        setLoading(false);  // Set loading to false after upload
-        alert(response.data.message);  // Show success message
+        setError("");  
+        setLoading(false);  
+        alert(response.data.message);  
 
-        // Fetch updated deliveries after CSV upload
+        
         const deliveryResponse = await axios.get("http://localhost:3000/api/delivery");
-        setDeliveries(deliveryResponse.data);  // Update deliveries state with new data
+        setDeliveries(deliveryResponse.data); 
       }
     } catch (err) {
       setError(err.response?.data?.error || "Error uploading CSV file");
-      setLoading(false);  // Set loading to false if error occurs
+      setLoading(false);  
     }
   };
 
   // Handle delete delivery
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/delivery/${id}`);  // Send delete request to the server
+      await axios.delete(`http://localhost:3000/api/delivery/${id}`); 
       setDeliveries((prevDeliveries) =>
-        prevDeliveries.filter((delivery) => delivery.id !== id)  // Remove the deleted delivery from the state
+        prevDeliveries.filter((delivery) => delivery.id !== id)  
       );
     } catch (err) {
-      setError("Error deleting delivery");  // Show error if delete fails
+      setError("Error deleting delivery");  
     }
   };
 
-  // Handle edit delivery
+ 
   const handleEdit = async (id, newAddress) => {
     try {
       const response = await axios.put(
         `http://localhost:3000/api/delivery/${id}`,
-        { address: newAddress }  // Send updated address to the server
+        { address: newAddress }  
       );
       setDeliveries((prevDeliveries) =>
         prevDeliveries.map((delivery) =>
-          delivery.id === id ? response.data : delivery  // Update the delivery in the state with the new data
+          delivery.id === id ? response.data : delivery  
         )
       );
     } catch (err) {
-      setError("Error updating delivery");  // Show error if update fails
+      setError("Error updating delivery"); 
     }
   };
 
@@ -102,7 +102,7 @@ const DeliveryManagement = () => {
               onClick={() =>
                 handleEdit(
                   delivery.id,
-                  prompt("New Address:", delivery.address)  // Prompt user to enter new address
+                  prompt("New Address:", delivery.address)  
                 )
               }
             >

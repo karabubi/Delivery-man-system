@@ -22,9 +22,9 @@ exports.getDeliveries = async (req, res) => {
 
   try {
     const deliveries = await db.query(
-      "SELECT * FROM deliveries WHERE user_id = $1", // <--- ❗️❗️❗️ I'm not sure it will work. At least it will return delivaries only for one user.
-      // You probably wanted to do `SELECT * FROM deliveries WHERE user_id = ${userID}`
-      [userId] // <-- If i am correct above, than you should probaly remove this [userId] as well
+      "SELECT * FROM deliveries WHERE user_id = $1", 
+      
+      [userId] 
     );
     res.json(deliveries.rows);
   } catch (err) {

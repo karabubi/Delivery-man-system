@@ -1,14 +1,11 @@
-/* TimeEstimates.css */
-
 /* Main container for the time estimates component */
 .time-estimates {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Take full height of the viewport */
   padding: 2rem;
-  background-color: #a49f9f; /* Light background color */
+  background-color:#bbb4b4; 
 }
 
 /* Box around the time estimates content */
@@ -51,7 +48,6 @@
   list-style-type: none;
   padding: 0;
   width: 100%;
-  
   text-align: center;
 }
 
@@ -65,7 +61,7 @@
   text-align: center;
 }
 
-.locations-list li div {
+.locations-list li {
   margin-bottom: 0.5rem;
 }
 
