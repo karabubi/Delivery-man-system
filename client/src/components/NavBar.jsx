@@ -39,6 +39,11 @@ const NavBar = () => {
             <Link to="/manage" className="nav-link">
               Delivery Management
             </Link>
+            <Link to="/bigmap" className="nav-link"> {/* Link to BigMapView */}
+             Big Map View
+           </Link>
+
+
             <UserButton ></UserButton >
             
           </>
