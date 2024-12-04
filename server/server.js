@@ -5,7 +5,7 @@ const cors = require("cors");
 const multer = require("multer");
 const csv = require("csv-parser");
 const fs = require("fs");
-const axios = require("axios"); // For making HTTP requests to OSRM API
+const axios = require("axios"); 
 const db = require("./util/db-connect");
 const addressesRoute = require("./routes/addresses");
 

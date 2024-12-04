@@ -40,7 +40,7 @@ const getBestRouteCoordinates = (locations, bestRoute) => {
 app.get('/api/best-route', async (req, res) => {
   try {
     const locations = await getLocationsFromDB();
-    const bestRoute = locations.map(loc => loc.name); // Dummy logic for best route, replace with actual logic
+    const bestRoute = locations.map(loc => loc.name); 
     const coordinates = getBestRouteCoordinates(locations, bestRoute);
     const options = {
       coordinates: coordinates,
