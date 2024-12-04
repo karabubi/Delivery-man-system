@@ -1,0 +1,111 @@
+/* Main container for the big map view */
+.big-map-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  
+  .big-map-view h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Container for the map */
+  .map-container-box-big {
+    width: 100%;
+    height: 90vh; /* Take up 80% of the viewport height */
+    max-width: 1250px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: white;
+  }
+  
+  /* Route summary styling */
+  .route-summary-big {
+    
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    
+  }
+  
+  .route-summary-big h3 {
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #333;
+    box-sizing: border-box;
+  }
+  
+  .route-summary-big p {
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    color: #666;
+    box-sizing: border-box;
+  }
+  
+  /* Responsive styles for tablets and smaller screens */
+  @media (max-width: 768px) {
+    .big-map-view h1 {
+      font-size: 2rem;
+    }
+  
+    .map-container-box-big {
+      height: 60vh; /* Reduce map height on tablets */
+    }
+  
+    .route-summary-big {
+      padding: 0.5rem;
+    }
+  
+    .route-summary-big h3 {
+      font-size: 1.5rem;
+    }
+  
+    .route-summary-big p {
+      font-size: 1rem;
+    }
+  }
+  
+  /* Responsive styles for very small screens (mobiles) */
+  @media (max-width: 480px) {
+    .big-map-view h1 {
+      font-size: 1.5rem;
+    }
+  
+    .map-container-box-big {
+      height: 50vh; /* Further reduce map height on phones */
+    }
+  
+    .route-summary-big {
+      padding: 0.5rem;
+    }
+  
+    .route-summary-big h3 {
+      font-size: 1.2rem;
+    }
+  
+    .route-summary-big p {
+      font-size: 0.9rem;
+    }
+  }
+  

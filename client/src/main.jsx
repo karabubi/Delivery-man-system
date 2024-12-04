@@ -6,7 +6,7 @@ import AddressList from "./components/AddressList";
 import RouteDashboard from "./components/Dashboard.jsx";
 import DeliveryManagement from "./components/DeliveryManagement.jsx";
 import Home from "./pages/Home.jsx";
-
+import BigMapView from "./components/BigMapView.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +28,11 @@ const router = createBrowserRouter([
       {
         path: "manage",
         element: <DeliveryManagement />,
+      },
+
+      {
+        path: "bigmap",
+        element: <BigMapView />,
       },
     ],
   },
