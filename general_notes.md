@@ -1,3 +1,24 @@
+## Features
+
+- Should be responsive. Check if all elements in the project look good on small screens. For example, navbar could be adjusted a bit.
+  ![screenshot](./assets/navbar.png)
+
+- At "Delivery Management" page user can upload file with address, but he can not write the address himself. It would be great to have not only upload file functionality, but also a normal input, where user can write address himself.
+
+- At "Delivery Management" page if user clicks on "Edit" button he receives a modal window like this:
+  ![screenshot](./assets/modal.png)
+- It would be better to show the input below like this:  
+  ![screenshot](./assets/dev_management_input.png)
+
+- At "Delivery Management" page it is unclear in which format the data should be uploaded. I would add a `<p>` with explanation like this:
+  ![screenshot](./assets/description.png)
+
+- You have list of addresses at "My addresses" and at "Delivery Management" page, but what is the difference between them? You should add a description for user or indicate somehow what it used for.
+
+- At Route Dashboard it would be great to see not only street name, but also the city and country.
+
+- It would be great to add some description of the project at home page. Usually at home page you can see the list of features, information how project can help user and so on.
+
 ## Client
 
 - AuthForm.jsx component is not imported anywhere. Do you use it? If not I would suggest to delete it.
@@ -49,5 +70,3 @@ src/index.html - this one should be removed. You have here a lot of code related
     }
   }
 ```
-
-
