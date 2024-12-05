@@ -1,106 +1,109 @@
 .navbar {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 1rem 2rem; 
-    background-image: url('../assets/deliver.jpg'); 
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
-    position: relative; 
-    height: 600px;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-image: url("../assets/deliver.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  height: 600px;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+.navbar-left p {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-left: auto;
+}
+
+.navbar a,
+.navbar-links .nav-link,
+.navbar-signout button {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  min-width: 100px;
+  border: none;
+  cursor: pointer;
+  background-color: #007bff;
+  box-sizing: border-box;
+}
+.navbar a:hover,
+.navbar-links .nav-link:hover,
+.navbar-signout button:hover {
+  background-color: #0056b3;
+  color: white;
+}
+.navbar button {
+  border: none;
+  background: #156a08;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.navbar button:hover {
+  background: #a71d2a;
+}
+.navbar button {
+  font-size: 0.9rem;
+}
+.navbar-signout button {
+  background-color: #12d74a;
+}
+.navbar-signout button:hover {
+  background-color: #23c875;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: 300px;
+    padding: 1rem;
   }
-  
-  /* Delivery System text on the left */
   .navbar-left p {
-    margin: 0; 
-    font-size: 1.5rem; 
-    font-weight: bold; 
-    color: white; 
-   
+    font-size: 1.25rem;
   }
-  
-  /* Links container on the right */
+  .navbar-links .nav-link,
+  .navbar-signout button,
+  .navbar a {
+    font-size: 0.9rem;
+    min-width: 80px;
+  }
   .navbar-links {
-    display: flex; 
-    gap: 1rem; 
-    align-items: center; 
-    margin-left: auto; 
+    gap: 0.8rem;
   }
-  
-  /* Links styling */
-  .navbar-links .nav-link, .navbar-signout button {
-    text-decoration: none;
-    color: white; 
-    font-size: 1rem; 
-    padding: 0.5rem 1rem; 
-    border-radius: 5px; 
-    transition: background-color 0.3s ease;
-    display: inline-block; 
-    text-align: center; 
-    min-width: 100px; 
-    border: none; 
-    cursor: pointer;
-    background-color: #007bff; 
+}
+@media (max-width: 480px) {
+  .navbar {
+    height: 200px;
   }
-  
-  /* Hover effect for links and buttons */
-  .navbar-links .nav-link:hover, .navbar-signout button:hover {
-    background-color: #0056b3; 
-    color: white; 
+  .navbar-left p {
+    font-size: 1rem;
   }
-  
-  /* Logout button specific styling */
-  .navbar-signout button {
-    background-color: #d73d12; 
+  .navbar-links .nav-link,
+  .navbar-signout button,
+  .navbar a {
+    font-size: 0.8rem;
+    min-width: 70px;
   }
-  
-  /* Hover effect for the logout button */
-  .navbar-signout button:hover {
-    background-color: #c82333; 
+  .navbar-links {
+    gap: 0.5rem;
   }
-  
-  /* Responsive Styling */
-  @media (max-width: 768px) {
-    .navbar {
-      height: 300px; 
-      padding: 1rem; 
-    }
-  
-    .navbar-left p {
-      font-size: 1.25rem; 
-    }
-  
-    .navbar-links .nav-link, .navbar-signout button {
-      font-size: 0.9rem; 
-      min-width: 80px; 
-    }
-  
-    .navbar-links {
-      gap: 0.8rem; 
-    }
-  }
-  
-  /* For very small devices like phones in portrait mode */
-  @media (max-width: 480px) {
-    .navbar {
-      height: 200px; 
-    }
-  
-    .navbar-left p {
-      font-size: 1rem; 
-    }
-  
-    .navbar-links .nav-link, .navbar-signout button {
-      font-size: 0.8rem; 
-      min-width: 70px; 
-    }
-  
-    .navbar-links {
-      gap: 0.5rem; 
-    }
-  }
-  
+}

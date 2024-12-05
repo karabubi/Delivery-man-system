@@ -4,89 +4,88 @@ import axios from "axios";
 import "./DeliveryManagement.css";
 
 const DeliveryManagement = () => {
-  const [deliveries, setDeliveries] = useState([]); 
-  const [error, setError] = useState("");           
-  const [loading, setLoading] = useState(false);    
+  const [deliveries, setDeliveries] = useState([]);
+  const [error, setError] = useState("");          
+  const [loading, setLoading] = useState(false);   
 
-  // Fetch deliveries when the component loads
   useEffect(() => {
     const fetchDeliveries = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/delivery");
-        setDeliveries(response.data);  
+        setDeliveries(response.data); 
       } catch (err) {
-        setError("Error fetching deliveries");  
+        setError("Error fetching deliveries"); 
       }
     };
-
-    fetchDeliveries();  
+    fetchDeliveries(); 
   }, []);
 
-  // Handle CSV upload
   const handleFileUpload = async (e) => {
-    const file = e.target.files[0];  
+    const file = e.target.files[0]; 
     if (!file) {
       setError("Please upload a CSV file.");
       return;
     }
-
     const formData = new FormData();
-    formData.append("file", file);  
-
+    formData.append("file", file); 
     try {
-      setLoading(true);  
+      setLoading(true); 
       const response = await axios.post("http://localhost:3000/api/upload-csv", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      // Handle the response from the server
       if (response.status === 200) {
-        setError("");  
-        setLoading(false);  
-        alert(response.data.message);  
-
-        
+        setError(""); 
+        setLoading(false); 
+        alert(response.data.message); 
         const deliveryResponse = await axios.get("http://localhost:3000/api/delivery");
-        setDeliveries(deliveryResponse.data); 
+        setDeliveries(deliveryResponse.data);
       }
     } catch (err) {
       setError(err.response?.data?.error || "Error uploading CSV file");
-      setLoading(false);  
+      setLoading(false); 
     }
   };
 
-  // Handle delete delivery
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/delivery/${id}`); 
-      setDeliveries((prevDeliveries) =>
-        prevDeliveries.filter((delivery) => delivery.id !== id)  
+      await axios.delete(`http://localhost:3000/api/delivery/${id}`);
+      setDeliveries((prevDeliveries) => 
+        prevDeliveries.filter((delivery) => delivery.id !== id) 
       );
     } catch (err) {
-      setError("Error deleting delivery");  
+      setError("Error deleting delivery"); 
     }
   };
 
- 
   const handleEdit = async (id, newAddress) => {
     try {
       const response = await axios.put(
         `http://localhost:3000/api/delivery/${id}`,
-        { address: newAddress }  
+        { address: newAddress } 
       );
       setDeliveries((prevDeliveries) =>
         prevDeliveries.map((delivery) =>
-          delivery.id === id ? response.data : delivery  
+          delivery.id === id ? response.data : delivery 
         )
       );
     } catch (err) {
-      setError("Error updating delivery"); 
+      setError("Error updating delivery");
     }
   };
 
   return (
     <div className="container">
       <h2>Delivery Management</h2>
+      <p>
+        This page allows you to manage the delivery addresses in your system. You can:
+      </p>
+      <ul>
+        <li><strong>Upload new addresses</strong> via CSV files.</li>
+        <li><strong>Edit</strong> existing addresses.</li>
+        <li><strong>Delete</strong> unwanted delivery addresses.</li>
+      </ul>
+      <h3>The data should contain the following columns: [street name - latitude - longitude]</h3>
+      
       {error && <div className="error-message">{error}</div>}  {/* Display error if exists */}
 
       {/* Upload CSV */}
@@ -102,7 +101,7 @@ const DeliveryManagement = () => {
               onClick={() =>
                 handleEdit(
                   delivery.id,
-                  prompt("New Address:", delivery.address)  
+                  prompt("New Address:", delivery.address)
                 )
               }
             >

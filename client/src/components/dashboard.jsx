@@ -1,7 +1,7 @@
 import ErrorBoundary from "./ErrorBoundary.jsx";
 import MapDisplay from "./MapDisplay.jsx";
 import TimeEstimates from "./TimeEstimates.jsx";
-import "./Dashboard.css"; // Import the RouteDashboard CSS
+import "./Dashboard.css"; 
 
 const RouteDashboard = () => {
   return (
@@ -18,3 +18,4 @@ const RouteDashboard = () => {
 };
 
 export default RouteDashboard;
+

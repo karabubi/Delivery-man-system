@@ -49,4 +49,3 @@ const MapDisplay = () => {
 };
 
 export default MapDisplay;
-

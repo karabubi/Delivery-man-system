@@ -1,4 +1,3 @@
-/* Main container styling */
 .container {
   display: flex;
   flex-direction: column;
@@ -7,26 +6,55 @@
   min-height: 100vh;
   padding: 2rem;
   background-color: #f4f4f4;
+  font-family: 'Arial', sans-serif;
 }
 
 h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
   color: #333;
+  text-align: center;
+}
+
+p {
+  font-size: 1.5rem;
+  color:#007bff;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-size: 1rem;
+  color: #007bff;
+  background-color: #f0f8ff;
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 5px;
 }
 
 .error-message {
   color: red;
   margin-bottom: 1rem;
+  font-size: 1rem;
+  text-align: center;
 }
 
-/* Styling for the file upload input */
 input[type="file"] {
   margin-bottom: 1rem;
-  background-color: rgb(243, 243, 157);
+  padding: 0.5rem;
+  background-color: #d8dc9f;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 300px;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
-/* Ensure all buttons have the same size */
+input[type="file"]:hover {
+  background-color: #e6f7ff;
+}
+
 button {
   width: 100px;
   height: 40px;
@@ -38,16 +66,17 @@ button {
   cursor: pointer;
   font-size: 1rem;
   box-sizing: border-box;
-  
 }
 
-/* Disabled button styling */
+button:hover {
+  background-color: #0056b3;
+}
+
 button:disabled {
   background-color: #999;
   cursor: not-allowed;
 }
 
-/* List styling */
 ul {
   list-style-type: none;
   padding: 0;
@@ -74,14 +103,18 @@ li span {
   color: #333;
 }
 
-/* Responsive styling for tablets and smaller screens */
+li button {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1.5rem;
   }
 
   h2 {
-    font-size: 1.75rem;
+    font-size: 2rem;
   }
 
   li {
@@ -90,16 +123,19 @@ li span {
   }
 
   li span {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   button {
     width: 100%;
-    margin: 0.5rem 0 0;
+    margin: 0.5rem 0;
+  }
+
+  input[type="file"] {
+    max-width: 100%;
   }
 }
 
-/* Responsive styling for very small screens (smartphones) */
 @media (max-width: 480px) {
   .container {
     padding: 1rem;
@@ -110,6 +146,15 @@ li span {
   }
 
   li span {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  button {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  input[type="file"] {
+    max-width: 100%;
   }
 }
