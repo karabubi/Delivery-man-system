@@ -1,29 +1,26 @@
-/* RouteDashboard.css */
 
-/* Container for the whole Dashboard */
 .Dashboard {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  min-height: 100vh; /* Take full height of the viewport */
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh; 
   padding: 2rem;
-  background-color: #f4f4f4; /* Light background color */
+  background-color: #f4f4f4; 
 }
 
-/* Box around the entire Dashboard content */
 .Dashboard-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 80%; /* Width of the Dashboard */
-  max-width: 1200px; /* Limit width on larger screens */
+  width: 80%; 
+  max-width: 1200px; 
   padding: 2rem;
-  background-color: white; /* Background color of the Dashboard box */
-  border-radius: 10px; /* Rounded corners */
-  border: 2px solid #ddd; /* Light border around the box */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow around the box */
+  background-color: white; 
+  border-radius: 10px; 
+  border: 2px solid #ddd; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .Dashboard h2 {
@@ -33,7 +30,6 @@
   text-align: center;
 }
 
-/* Styling for loading and error messages */
 .Dashboard .loading-message,
 .Dashboard .error-message {
   font-size: 1.2rem;
@@ -41,7 +37,6 @@
   text-align: center;
 }
 
-/* Responsive styles for tablets and smaller screens */
 @media (max-width: 768px) {
   .Dashboard-box {
     width: 95%;
@@ -53,7 +48,6 @@
   }
 }
 
-/* Responsive styles for very small devices */
 @media (max-width: 480px) {
   .Dashboard-box {
     width: 100%;
