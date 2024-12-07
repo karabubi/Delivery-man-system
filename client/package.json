@@ -12,7 +12,11 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.15.5",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
     "@mapbox/polyline": "^1.2.1",
+    "@mui/icons-material": "^6.1.10",
+    "@mui/material": "^6.1.10",
     "axios": "^1.7.7",
     "leaflet": "^1.9.4",
     "polyline": "^0.2.0",
