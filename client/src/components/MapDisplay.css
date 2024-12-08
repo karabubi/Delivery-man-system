@@ -1,46 +1,157 @@
+/* Container for the Map Display */
+.map-display-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding: 2rem;
+  box-sizing: border-box;
+}
 
-/* Container for the map */
+/* Box for the Map Display content */
+.map-display-box {
+  background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Title Styling */
+.map-display-box h3 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600; /* Add more emphasis to the title */
+}
+
+/* Summary Box Styling */
+.summary-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 5px;
+  border: 2px solid #d6c3c3;
+  width: 55%;
+  margin-bottom: 2rem;
+  font-size: 1.9rem;
+  color: #333;
+  text-align: center; /* Center the text */
+}
+
+.summary-box div {
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+/* Locations List Styling */
+.locations-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;  /* Center the list items */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  gap: 1.5rem; /* Add space between the list items */
+  box-sizing: border-box;
+}
+
+.locations-list li {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #d6c3c3;
+  width: 100%; /* List items take up 90% of the container width */
+  max-width: 800px; /* Prevent list items from becoming too wide */
+  text-align: center;
+}
+
+.locations-list li div {
+  margin-bottom: 0.5rem;
+}
+
+.locations-list li strong {
+  color: #007bff; /* Highlight location names */
+}
+
+.locations-list li span {
+  color: #555;
+}
+
+/* Map Container Styling */
 .map-container {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    height: 100vh; 
-    width: 100%; 
+  width: 100%;
+  height: 500px;
+  margin-top: 2rem;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading and Error Message Styling */
+.loading-message {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+/* Responsive Design for Tablets */
+@media (max-width: 768px) {
+  .map-display-box {
+    padding: 1.5rem;
   }
-  
-  /* Boxed container around the map */
-  .map-box {
-    width: 100%;
-    max-width: 1200px; 
-    height: 600px; 
-    border: 2px solid #ccc; 
-    border-radius: 10px; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: white;
-  }
-  
-  /* Optional: Styling for loading and error messages */
-  .map-container .loading-message {
+
+  .map-display-box h3 {
     font-size: 1.5rem;
-    text-align: center;
-    color: #333;
   }
-  
-  /* Responsive styles for smaller screens */
-  @media (max-width: 768px) {
-    .map-box {
-      width: 95%; 
-      height: 400px; 
-    }
-  
+
+  .summary-box {
+    font-size: 1rem;
   }
-  
-  @media (max-width: 480px) {
-    .map-box {
-      width: 100%;
-      height: 400px; 
-    }
-  
-    
+
+  .locations-list li {
+    padding: 0.8rem;
+    width: 95%; /* Use more width on tablets */
   }
-  
+
+  .map-container {
+    height: 400px; /* Reduce map height for tablet screens */
+  }
+}
+
+/* Responsive Design for Mobile Devices */
+@media (max-width: 480px) {
+  .map-display-box {
+    padding: 1rem;
+  }
+
+  .map-display-box h3 {
+    font-size: 1.2rem;
+  }
+
+  .summary-box {
+    font-size: 0.9rem;
+  }
+
+  .locations-list li {
+    padding: 0.6rem;
+    width: 100%; /* Full width on mobile screens */
+  }
+
+  .map-container {
+    height: 300px; /* Reduce map height for mobile screens */
+  }
+}
