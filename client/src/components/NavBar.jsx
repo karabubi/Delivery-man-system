@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { useUser, useClerk } from "@clerk/clerk-react";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
@@ -78,18 +77,46 @@ const NavBar = () => {
                 <Typography sx={{ textAlign: "center" }}>Home</Typography>
               </MenuItem>
               {isSignedIn && [
-                <MenuItem key="Dashboard" component={Link} to="/Dashboard" onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>Route Dashboard</Typography>
+                <MenuItem
+                  key="Dashboard"
+                  component={Link}
+                  to="/Dashboard"
+                  onClick={handleCloseNavMenu}
+                >
+                  <Typography sx={{ textAlign: "center" }}>
+                    Route Dashboard
+                  </Typography>
                 </MenuItem>,
-                <MenuItem key="Addresses" component={Link} to="/addresses" onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>Addresses</Typography>
+                <MenuItem
+                  key="Addresses"
+                  component={Link}
+                  to="/addresses"
+                  onClick={handleCloseNavMenu}
+                >
+                  <Typography sx={{ textAlign: "center" }}>
+                    Addresses
+                  </Typography>
                 </MenuItem>,
-                <MenuItem key="Manage" component={Link} to="/manage" onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>Delivery Management</Typography>
+                <MenuItem
+                  key="Manage"
+                  component={Link}
+                  to="/manage"
+                  onClick={handleCloseNavMenu}
+                >
+                  <Typography sx={{ textAlign: "center" }}>
+                    Delivery Management
+                  </Typography>
                 </MenuItem>,
-                <MenuItem key="BigMap" component={Link} to="/bigmap" onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>Big Map View</Typography>
-                </MenuItem>
+                <MenuItem
+                  key="BigMap"
+                  component={Link}
+                  to="/bigmap"
+                  onClick={handleCloseNavMenu}
+                >
+                  <Typography sx={{ textAlign: "center" }}>
+                    Big Map View
+                  </Typography>
+                </MenuItem>,
               ]}
             </Menu>
           </Box>
@@ -104,7 +131,10 @@ const NavBar = () => {
             Delivery System
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} className="navbar-links-left">
+          <Box
+            sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+            className="navbar-links-left"
+          >
             <Link to="/" className="nav-link">
               Home
             </Link>
@@ -122,7 +152,9 @@ const NavBar = () => {
                 <Link to="/bigmap" className="nav-link">
                   Big Map View
                 </Link>
-                <UserButton className="sign-out-button" />
+                <div className="signIn-container">
+                  <UserButton className="sign-out-button" />
+                </div>
               </>
             ) : (
               <SignInButton className="sign-in-button" />
@@ -151,17 +183,21 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {isSignedIn ? [
-                <MenuItem key="Home" onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>Home</Typography>
-                </MenuItem>,
-                <MenuItem key="Dashboard" onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>Dashboard</Typography>
-                </MenuItem>,
-                <MenuItem key="Logout" onClick={handleLogout}>
-                  <Typography sx={{ textAlign: "center" }}>Logout</Typography>
-                </MenuItem>
-              ] : (
+              {isSignedIn ? (
+                [
+                  <MenuItem key="Home" onClick={handleCloseUserMenu}>
+                    <Typography sx={{ textAlign: "center" }}>Home</Typography>
+                  </MenuItem>,
+                  <MenuItem key="Dashboard" onClick={handleCloseUserMenu}>
+                    <Typography sx={{ textAlign: "center" }}>
+                      Dashboard
+                    </Typography>
+                  </MenuItem>,
+                  <MenuItem key="Logout" onClick={handleLogout}>
+                    <Typography sx={{ textAlign: "center" }}>Logout</Typography>
+                  </MenuItem>,
+                ]
+              ) : (
                 <SignInButton className="sign-in-button" />
               )}
             </Menu>
