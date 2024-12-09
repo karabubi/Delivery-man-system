@@ -10,34 +10,35 @@ const MapDisplay = () => {
   const [timeData, setTimeData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [mapCenter, setMapCenter] = useState([50.73743, 7.098206]);
   // Fetch delivery locations from the server
   useEffect(() => {
     const fetchLocations = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/delivery");
-        const fetchedLocations = response.data.map((delivery) => ({
-          address: delivery.address,
-          lat: delivery.position_latitude,
-          lng: delivery.position_longitude,
-        }));
+        if (response.data && Array.isArray(response.data.deliveries)) {
+          const fetchedLocations = response.data.deliveries.map((delivery) => ({
+            address: delivery.address,
+            lat: delivery.position_latitude,
+            lng: delivery.position_longitude,
+          }));
+
 
         const validLocations = fetchedLocations.filter(
           (loc) => loc.lat && loc.lng
         );
-
-        if (validLocations.length === 0) {
-          throw new Error("No valid locations found.");
-        }
-
         setLocations(validLocations);
+        setMapCenter(response.data.startCoordinates || mapCenter); // Set center to Adenauerallee 1 if available
         setLoading(false);
-      } catch (error) {
-        console.error("Error fetching delivery locations:", error);
-        setError(`Failed to fetch delivery locations: ${error.message}`);
-        setLoading(false);
+      } else {
+        throw new Error("Deliveries data is not in the expected format.");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching delivery locations:", error);
+      setError(`Failed to fetch delivery locations: ${error.message}`);
+      setLoading(false);
+    }
+  };
 
     fetchLocations();
   }, []);

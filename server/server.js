@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -5,7 +6,7 @@ const cors = require("cors");
 const multer = require("multer");
 const csv = require("csv-parser");
 const fs = require("fs");
-const axios = require("axios"); 
+const axios = require("axios");
 const db = require("./util/db-connect");
 const addressesRoute = require("./routes/addresses");
 
@@ -24,14 +25,25 @@ app.get("/", (req, res) => {
 
 app.use("/api/addresses", addressesRoute);
 
-// Fetch All Deliveries
+// Fetch All Deliveries with Starting Coordinates for Adenauerallee 1
 app.get("/api/delivery", async (req, res) => {
   try {
     const deliveries = await db("deliveries").select("*");
+
+    // Starting point coordinates for Adenauerallee 1
+    const startCoordinates = {
+      lat: 50.73743,
+      lng: 7.098206,
+    };
+
     if (deliveries.length === 0) {
       return res.status(404).json({ message: "No deliveries found." });
     }
-    res.status(200).json(deliveries);
+
+    res.status(200).json({
+      startCoordinates,  // Include the start location for Adenauerallee 1
+      deliveries,
+    });
   } catch (err) {
     console.error("Error fetching deliveries:", err.message);
     res.status(500).json({
@@ -89,7 +101,7 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
     .on("end", async () => {
       try {
         await db("deliveries").insert(deliveries);
-        console.log(deliveries)
+        console.log(deliveries);
         res.status(200).json({ message: "CSV file processed and data saved." });
       } catch (err) {
         console.error("Error inserting CSV data:", err.message);
@@ -123,7 +135,6 @@ app.post("/api/best-route", async (req, res) => {
   }
 
   // Validate coordinates: ensure no null lat/lng
-
   const validLocations = locations.filter((loc) => loc.lat && loc.lng);
 
   if (validLocations.length < 2) {
@@ -141,7 +152,6 @@ app.post("/api/best-route", async (req, res) => {
   const apiUrl = `${osrmBaseUrl}/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
 
   // Check if the response has valid routes
-
   try {
     const response = await axios.get(apiUrl);
 
@@ -156,6 +166,7 @@ app.post("/api/best-route", async (req, res) => {
 
     const route = response.data.routes[0];
     const { distance, duration, geometry, legs } = route;
+
     // Convert duration to hours and minutes
     const hours = Math.floor(duration / 3600);
     const minutes = Math.floor((duration % 3600) / 60);
@@ -166,7 +177,7 @@ app.post("/api/best-route", async (req, res) => {
       const startLocation = leg.steps[0]?.maneuver?.location || [];
       const endLocation =
         leg.steps[leg.steps.length - 1]?.maneuver?.location || [];
-        const adjustedDuration = leg.duration + 900;
+      const adjustedDuration = leg.duration + 900;
 
       return {
         address: validLocations[index]?.address || "Unknown",
@@ -175,6 +186,7 @@ app.post("/api/best-route", async (req, res) => {
         estimatedTime: `${Math.floor(adjustedDuration / 60)} minutes`,
       };
     });
+
     // Add the final destination location
     const finalLeg = legs[legs.length - 1];
     const finalEndLocation =
@@ -195,9 +207,7 @@ app.post("/api/best-route", async (req, res) => {
     });
   } catch (err) {
     console.error("Error in calculating route:", err.message);
-    res
-      .status(500)
-      .json({ error: "Failed to calculate route", details: err.message });
+    res.status(500).json({ error: "Failed to calculate route", details: err.message });
   }
 });
 
@@ -244,7 +254,15 @@ app.delete("/api/delivery/:id", async (req, res) => {
   }
 });
 
-
+// Delete All Deliveries
+app.delete("/api/delete-all-deliveries", async (req, res) => {
+  try {
+    await db("deliveries").del();
+    res.status(200).send({ message: "All deliveries deleted" });
+  } catch (err) {
+    res.status(500).send({ error: "Error deleting deliveries" });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

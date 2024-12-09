@@ -43,7 +43,7 @@
     
   }
   
-  .route-summary-big h3 {
+  .route-summary-big h4{
     display: flex;
     justify-content:center;
     align-items: center;
