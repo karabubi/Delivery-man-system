@@ -7,7 +7,7 @@ const DeliveryManagement = () => {
   const [deliveries, setDeliveries] = useState([]);
   const [error, setError] = useState("");          
   const [loading, setLoading] = useState(false);   
-
+  const [successMessage, setSuccessMessage] = useState("");
   useEffect(() => {
     const fetchDeliveries = async () => {
       try {
@@ -36,7 +36,12 @@ const DeliveryManagement = () => {
       if (response.status === 200) {
         setError(""); 
         setLoading(false); 
-        alert(response.data.message); 
+        setSuccessMessage("File successfully uploaded and data has been stored!");  // Set success message
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
+
+       // alert(response.data.message); 
         const deliveryResponse = await axios.get("http://localhost:3000/api/delivery");
         setDeliveries(deliveryResponse.data);
       }
@@ -87,10 +92,10 @@ const DeliveryManagement = () => {
       <h3>The data should contain the following columns: [street name - latitude - longitude]</h3>
       
       {error && <div className="error-message">{error}</div>}  {/* Display error if exists */}
-
+      {successMessage && <div className="success-message">{successMessage}</div>}
       {/* Upload CSV */}
       <input type="file" accept=".csv" onChange={handleFileUpload} />  {/* File input for CSV upload */}
-      {loading && <p>Uploading...</p>}  {/* Show loading text during upload */}
+      {loading && <p className="uploading-text">Uploading...</p>}  {/* Show loading text during upload */}
 
       {/* List of Deliveries */}
       <ul>

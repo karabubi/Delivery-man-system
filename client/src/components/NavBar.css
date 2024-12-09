@@ -69,9 +69,8 @@
 .sign-in-button:hover {
   background-color: darkred; 
 }
-
 .sign-out-button {
-  background-color:green !important; 
+  background-color: green !important; 
   color: white !important;  
   border: none;
   padding: 10px 20px;
