@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup } from 'react-leaflet';
 import axios from 'axios';
-import './MapDisplay.css'; // Import the MapDisplay CSS
+import './MapDisplay.css'; 
 
 const MapDisplay = () => {
   const [locations, setLocations] = useState([]);
@@ -80,13 +80,13 @@ const MapDisplay = () => {
   return (
     <div className="map-display-container">
       <div className="map-display-box">
-        <h3>Route Information</h3>
+        <h2>Route Information</h2>
         <div className="summary-box">
           <div><strong>Total Travel Time:</strong> {timeData?.duration}</div>
           <div><strong>Total Distance:</strong> {timeData?.distance} km</div>
         </div>
 
-        <h3>Ordered Locations</h3>
+        <h2>Ordered Locations</h2>
         <ul className="locations-list">
           {timeData?.orderedLocations?.map((location, index) => (
             <li key={index}>
