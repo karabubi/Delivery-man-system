@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
 import "./BigMapView.css";
-
+import BackToTop from "./BackToTop";
 const BigMapView = () => {
   const [locations, setLocations] = useState([]);
   const [route, setRoute] = useState([]);
@@ -110,8 +110,11 @@ const BigMapView = () => {
           <h4>Route Summary</h4>
           <p><strong>Total Travel Time:</strong> {timeData.duration}</p>
           <p><strong>Total Distance:</strong> {timeData.distance} km</p>
+          <BackToTop />
         </div>
       )}
+    
+
     </div>
   );
 };

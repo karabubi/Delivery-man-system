@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup } from 'react-leaflet';
 import axios from 'axios';
 import './MapDisplay.css'; 
+import  BackToTop from "./BackToTop.jsx";
 
 const MapDisplay = () => {
   const [locations, setLocations] = useState([]);
@@ -112,6 +113,7 @@ const MapDisplay = () => {
             ))}
             <Polyline positions={route} color="blue" />
           </MapContainer>
+          <BackToTop />
         </div>
       </div>
     </div>

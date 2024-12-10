@@ -62,17 +62,28 @@
   font-size: 1rem;
 }
 
+.menu-icon {
+  color: rgb(5, 5, 5); /* Change to your desired color */
+  transition: color 0.3s ease; /* Optional: Smooth transition for hover */
+}
+.menu-icon-button:hover .menu-icon {
+  color: blue; /* Color on hover */
+}
+
 .sign-in-button:hover {
   background-color: darkred;
 }
+
+
 .sign-out-button {
   background-color: green !important;
   color: white !important;
   border: none;
-  padding: 10px 20px;
+  padding: 8px 15px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  display: inline-block;
 }
 
 .sign-out-button:hover {
