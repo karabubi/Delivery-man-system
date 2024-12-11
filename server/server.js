@@ -58,12 +58,19 @@ app.post("/api/delivery", async (req, res) => {
 
   if (!address || !positionLatitude || !positionLongitude) {
     return res.status(400).json({
-      error:
-        "Missing required fields. Please provide address, latitude, and longitude.",
+      error: "Missing required fields. Please provide address, latitude, and longitude.",
     });
   }
 
   try {
+    const existingDelivery = await db("deliveries").where({ address }).first();
+
+    if (existingDelivery) {
+      return res.status(409).json({
+        error: "Duplicate delivery address. This address already exists.",
+      });
+    }
+
     const [newDelivery] = await db("deliveries")
       .insert({
         address,
@@ -87,7 +94,6 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
   const filePath = req.file.path;
   const deliveries = [];
 
-  // Read CSV file
   fs.createReadStream(filePath)
     .pipe(csv())
     .on("data", (row) => {
@@ -99,26 +105,25 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
     })
     .on("end", async () => {
       try {
-        await db("deliveries").insert(deliveries);
-        console.log(deliveries);
+        const existingAddresses = await db("deliveries").pluck("address");
+        const newDeliveries = deliveries.filter((delivery) => !existingAddresses.includes(delivery.address));
+        if (newDeliveries.length === 0) {
+          return res.status(409).json({ error: "All addresses in the uploaded file already exist." });
+        }
+
+        await db("deliveries").insert(newDeliveries);
         res.status(200).json({ message: "CSV file processed and data saved." });
       } catch (err) {
         console.error("Error inserting CSV data:", err.message);
-        res.status(500).json({
-          error: "Failed to save CSV data to the database",
-          details: err.message,
-        });
+        res.status(500).json({ error: "Failed to save CSV data to the database" });
       } finally {
-        fs.unlinkSync(filePath); // Remove the temporary file
+        fs.unlinkSync(filePath);
       }
     })
     .on("error", (err) => {
       console.error("Error processing CSV file:", err.message);
-      res.status(500).json({
-        error: "Failed to process CSV file",
-        details: err.message,
-      });
-      fs.unlinkSync(filePath); // Remove the temporary file
+      res.status(500).json({ error: "Failed to process CSV file" });
+      fs.unlinkSync(filePath);
     });
 });
 
