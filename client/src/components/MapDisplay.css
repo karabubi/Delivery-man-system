@@ -1,18 +1,45 @@
+/* Import Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+  --main-font: 'Inter', sans-serif;
+  --primary-color: #007BFF; /* Bright Blue */
+  --secondary-color: #F9F9F9; /* Light Gray Background */
+  --border-color: #D6C3C3; /* Neutral Border Color */
+  --shadow-color: rgba(0, 0, 0, 0.1); /* Subtle Shadow */
+  --map-bg-color: #FFFFFF; /* Map Container Background */
+  --box-bg-color: rgba(255, 255, 255, 0.9); /* Semi-transparent Box */
+  --text-color: #333; /* Default Text Color */
+  --highlight-color: #FFD700; /* Gold for Highlights */
+}
+
+/* Apply Global Font */
+body {
+  font-family: var(--main-font);
+  margin: 0;
+  padding: 0;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  box-sizing: border-box;
+}
+
+/* Container for the Map Display Component */
 .map-display-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  background-color: #f4f4f4;
   padding: 2rem;
+  background-color: var(--secondary-color);
   box-sizing: border-box;
 }
 
+/* Central Box Styling */
 .map-display-box {
-  background-color: rgba(255, 255, 255, 0.9); 
+  background-color: var(--box-bg-color);
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--shadow-color);
   padding: 2rem;
   max-width: 1200px;
   width: 100%;
@@ -20,27 +47,33 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
-.map-display-box h3 {
+.map-display-box h2 {
   font-size: 2rem;
-  color: #333;
+  color: var(--primary-color);
   margin-bottom: 1rem;
   text-align: center;
-  font-weight: 600; 
+  font-weight: 700;
 }
 
 .summary-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   border-radius: 5px;
-  border: 2px solid #d6c3c3;
-  width: 55%;
+  border: 1px solid var(--border-color);
+  background-color: var(--secondary-color);
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem;
   margin-bottom: 2rem;
-  font-size: 1.9rem;
-  color: #333;
-  text-align: center; 
+  font-size: 1.2rem;
+  color: var(--text-color);
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .summary-box div {
@@ -49,54 +82,48 @@
 }
 
 .locations-list {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;  
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  gap: 0.9rem; 
+  gap: 1rem;
   box-sizing: border-box;
 }
 
 .locations-list li {
-  background-color: #f9f9f9;
-  padding: 2rem;
+  background-color: var(--secondary-color);
+  padding: 1.5rem;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 2px solid #d6c3c3;
-  width: 100%; 
-  max-width: 800px; 
+  box-shadow: 0 2px 4px var(--shadow-color);
+  border: 1px solid var(--border-color);
   text-align: center;
+  box-sizing: border-box;
 }
 
 .locations-list li div {
   margin-bottom: 0.5rem;
+  font-size: 1rem;
 }
 
 .locations-list li strong {
-  color: #007bff; 
-}
-
-.locations-list li span {
-  color: #555;
+  color: var(--primary-color);
 }
 
 .map-container {
   width: 100%;
   height: 500px;
   margin-top: 2rem;
-  border: 2px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
-  background-color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--map-bg-color);
+  box-shadow: 0 4px 10px var(--shadow-color);
 }
 
 .loading-message {
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-color);
   margin: 1rem 0;
   text-align: center;
 }
@@ -104,45 +131,53 @@
 @media (max-width: 768px) {
   .map-display-box {
     padding: 1.5rem;
+    box-sizing: border-box;
   }
 
-  .map-display-box h3 {
-    font-size: 1.5rem;
+  .map-display-box h2 {
+    font-size: 1.8rem;
   }
 
   .summary-box {
     font-size: 1rem;
+    padding: 0.8rem;
+    box-sizing: border-box;
   }
 
   .locations-list li {
-    padding: 0.8rem;
-    width: 95%;
+    padding: 1rem;
+    font-size: 0.9rem;
+    box-sizing: border-box;
   }
 
   .map-container {
-    height: 400px; 
+    height: 400px;
   }
 }
 
 @media (max-width: 480px) {
   .map-display-box {
     padding: 1rem;
+    box-sizing: border-box;
   }
 
-  .map-display-box h3 {
-    font-size: 1.2rem;
+  .map-display-box h2 {
+    font-size: 1.5rem;
   }
 
   .summary-box {
     font-size: 0.9rem;
+    padding: 0.6rem;
+    box-sizing: border-box;
   }
 
   .locations-list li {
-    padding: 0.6rem;
-    width: 100%; 
+    padding: 0.8rem;
+    font-size: 0.8rem;
+    box-sizing: border-box;
   }
 
   .map-container {
-    height: 300px; 
+    height: 300px;
   }
 }

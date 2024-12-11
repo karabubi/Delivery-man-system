@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { useUser, useClerk } from "@clerk/clerk-react";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
@@ -20,11 +21,6 @@ const NavBar = () => {
   const { signOut } = useClerk();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await signOut();
-    navigate("/");
-  };
-
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -44,10 +40,16 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <AppBar position="static" className="MuiAppBar-root">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          {/* Hamburger Menu (Mobile View) */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -55,9 +57,9 @@ const NavBar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              className="menu-icon-button"
             >
-              <MenuIcon />
+              <MenuIcon className="menu-icon" />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -73,54 +75,66 @@ const NavBar = () => {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
             >
-              <MenuItem component={Link} to="/" onClick={handleCloseNavMenu}>
-                <Typography sx={{ textAlign: "center" }}>Home</Typography>
-              </MenuItem>
-              {isSignedIn && [
-                <MenuItem
-                  key="Dashboard"
-                  component={Link}
-                  to="/Dashboard"
-                  onClick={handleCloseNavMenu}
-                >
-                  <Typography sx={{ textAlign: "center" }}>
-                    Route Dashboard
-                  </Typography>
+              {[ // Provide an array directly instead of using fragments
+                <MenuItem component={Link} to="/" onClick={handleCloseNavMenu} key="home">
+                  <Typography sx={{ textAlign: "center" }}>Home</Typography>
                 </MenuItem>,
-                <MenuItem
-                  key="Addresses"
-                  component={Link}
-                  to="/addresses"
-                  onClick={handleCloseNavMenu}
-                >
-                  <Typography sx={{ textAlign: "center" }}>
-                    Addresses
-                  </Typography>
-                </MenuItem>,
-                <MenuItem
-                  key="Manage"
-                  component={Link}
-                  to="/manage"
-                  onClick={handleCloseNavMenu}
-                >
-                  <Typography sx={{ textAlign: "center" }}>
-                    Delivery Management
-                  </Typography>
-                </MenuItem>,
-                <MenuItem
-                  key="BigMap"
-                  component={Link}
-                  to="/bigmap"
-                  onClick={handleCloseNavMenu}
-                >
-                  <Typography sx={{ textAlign: "center" }}>
-                    Big Map View
-                  </Typography>
-                </MenuItem>,
+                isSignedIn && (
+                  <MenuItem
+                    key="dashboard"
+                    component={Link}
+                    to="/Dashboard"
+                    onClick={handleCloseNavMenu}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>Route Dashboard</Typography>
+                  </MenuItem>
+                ),
+                isSignedIn && (
+                  <MenuItem
+                    key="addresses"
+                    component={Link}
+                    to="/addresses"
+                    onClick={handleCloseNavMenu}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>Addresses</Typography>
+                  </MenuItem>
+                ),
+                isSignedIn && (
+                  <MenuItem
+                    key="manage"
+                    component={Link}
+                    to="/manage"
+                    onClick={handleCloseNavMenu}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>Delivery Management</Typography>
+                  </MenuItem>
+                ),
+                isSignedIn && (
+                  <MenuItem
+                    key="bigmap"
+                    component={Link}
+                    to="/bigmap"
+                    onClick={handleCloseNavMenu}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>Big Map View</Typography>
+                  </MenuItem>
+                ),
+                isSignedIn ? (
+                  <MenuItem key="signout" onClick={handleLogout}>
+                    <Typography sx={{ textAlign: "center" }}>Sign Out</Typography>
+                  </MenuItem>
+                ) : (
+                  <MenuItem key="signin">
+                    <SignInButton>
+                      <Typography sx={{ textAlign: "center" }}>Sign In</Typography>
+                    </SignInButton>
+                  </MenuItem>
+                ),
               ]}
             </Menu>
           </Box>
 
+          {/* Navbar Title */}
           <Typography
             variant="h6"
             noWrap
@@ -131,6 +145,7 @@ const NavBar = () => {
             Delivery System
           </Typography>
 
+          {/* Desktop Navigation Links */}
           <Box
             sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
             className="navbar-links-left"
@@ -161,6 +176,7 @@ const NavBar = () => {
             )}
           </Box>
 
+          {/* User Avatar Menu */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -185,20 +201,20 @@ const NavBar = () => {
             >
               {isSignedIn ? (
                 [
-                  <MenuItem key="Home" onClick={handleCloseUserMenu}>
+                  <MenuItem key="home" onClick={handleCloseUserMenu}>
                     <Typography sx={{ textAlign: "center" }}>Home</Typography>
                   </MenuItem>,
-                  <MenuItem key="Dashboard" onClick={handleCloseUserMenu}>
-                    <Typography sx={{ textAlign: "center" }}>
-                      Dashboard
-                    </Typography>
+                  <MenuItem key="dashboard" onClick={handleCloseUserMenu}>
+                    <Typography sx={{ textAlign: "center" }}>Dashboard</Typography>
                   </MenuItem>,
-                  <MenuItem key="Logout" onClick={handleLogout}>
+                  <MenuItem key="logout" onClick={handleLogout}>
                     <Typography sx={{ textAlign: "center" }}>Logout</Typography>
                   </MenuItem>,
                 ]
               ) : (
-                <SignInButton className="sign-in-button" />
+                <MenuItem key="signin">
+                  <SignInButton className="sign-in-button" />
+                </MenuItem>
               )}
             </Menu>
           </Box>
@@ -209,5 +225,4 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
 

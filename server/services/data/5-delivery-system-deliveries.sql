@@ -63,21 +63,8 @@ VALUES
     (1, 'Rathausgasse 47', 50.735923, 7.098423),
     (1, 'Josefstraße 48', 50.731562, 7.095761),
     (1, 'Am Hof 49', 50.735873, 7.099812),
-    (1, 'Brüderstraße 50', 50.735341, 7.099124),
-    (1, 'Charlottenburg Palace', 52.520606, 13.295379),
-    (1, 'Berliner Dom', 52.519167, 13.401594),
-    (1, 'Tiergarten', 52.514394, 13.359162),
-    (1, 'Gendarmenmarkt', 52.513674, 13.3925),
-    (1, 'Kurfürstendamm', 52.507798, 13.331153),
-    (1, 'Olympiastadion', 52.514568, 13.290158),
-    (1, 'Schloss Bellevue', 52.514344, 13.310579),
-    (1, 'Charlottenburg', 52.520273, 13.295379),
-    (1, 'Unter den Linden', 52.514678, 13.391336),
-    (1, 'Siegessäule', 52.514404, 13.350297),
-    (1, 'Tempelhofer Feld', 52.474604, 13.402671),
-    (1, 'Bebelplatz', 52.517273, 13.393272),
-    (1, 'Berlin Hauptbahnhof', 52.525687, 13.369467),
-    (1, 'Berlin Zoo', 52.508404, 13.338036);
+    (1, 'Brüderstraße 50', 50.735341, 7.099124);
+   
 
 -- Select all data from the deliveries table
 SELECT * FROM deliveries;
