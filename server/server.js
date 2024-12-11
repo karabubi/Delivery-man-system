@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -41,7 +40,7 @@ app.get("/api/delivery", async (req, res) => {
     }
 
     res.status(200).json({
-      startCoordinates,  // Include the start location for Adenauerallee 1
+      startCoordinates, // Include the start location for Adenauerallee 1
       deliveries,
     });
   } catch (err) {
@@ -94,8 +93,8 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
     .on("data", (row) => {
       deliveries.push({
         address: row.address,
-        position_latitude: parseFloat(row.position_latitude),
-        position_longitude: parseFloat(row.position_longitude),
+        position_latitude: parseFloat(row.latitude),
+        position_longitude: parseFloat(row.longitude),
       });
     })
     .on("end", async () => {
@@ -207,7 +206,9 @@ app.post("/api/best-route", async (req, res) => {
     });
   } catch (err) {
     console.error("Error in calculating route:", err.message);
-    res.status(500).json({ error: "Failed to calculate route", details: err.message });
+    res
+      .status(500)
+      .json({ error: "Failed to calculate route", details: err.message });
   }
 });
 
