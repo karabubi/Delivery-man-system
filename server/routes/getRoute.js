@@ -14,6 +14,8 @@ const getRoute = async (req, res) => {
     const coordinates = locations
       .map((loc) => `${loc.longitude},${loc.latitude}`)
       .join(";");
+    console.debug({coordinates})
+
     const osrmBaseUrl =
       process.env.OSRM_BASE_URL || "http://router.project-osrm.org";
     const osrmUrl = `${osrmBaseUrl}/route/v1/driving/${coordinates}?overview=false`;
@@ -22,7 +24,7 @@ const getRoute = async (req, res) => {
     const response = await axios.get(osrmUrl);
     const responseCopy = await axios.get(osrmUrl);
     console.log("response", response, "responseCopy", responseCopy);
-
+    console.log("response", response);
     if (
       !response.data ||
       !response.data.routes ||
@@ -30,7 +32,6 @@ const getRoute = async (req, res) => {
     ) {
       return res.status(404).json({ error: "No route found." });
     }
-
     const route = response.data.routes[0].geometry.coordinates;
     res.json({ route });
   } catch (err) {

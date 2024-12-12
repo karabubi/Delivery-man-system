@@ -1,6 +1,7 @@
 /* Import Inter font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
+/* Root Variables */
 :root {
   --main-font: 'Inter', sans-serif;
   --primary-color: #007BFF; /* Vibrant Blue */
@@ -10,10 +11,10 @@
   --highlight-color: #0056B3; /* Hover Color */
   --shadow-color: rgba(0, 0, 0, 0.1); /* Subtle Shadow */
   --border-radius: 10px; /* Rounded Corners */
-  --text-padding: 0.5rem;
+  --transition-speed: 0.3s ease; /* Smooth Transitions */
 }
 
-/* Apply Inter Font Globally */
+/* Global Styles */
 body {
   font-family: var(--main-font);
   margin: 0;
@@ -21,6 +22,7 @@ body {
   background-color: var(--secondary-color);
   color: var(--text-color);
   box-sizing: border-box;
+  line-height: 1.6;
 }
 
 /* Home Container */
@@ -40,22 +42,26 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
-}
-
-.header-content {
   text-align: center;
-  padding: 4rem;
-  box-sizing: border-box;
+  background: var(--primary-color);
+  color: var(--background-color);
+  padding: 2rem 1rem;
+  margin-bottom: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 10px var(--shadow-color);
 }
 
 .header-content h1 {
-  font-size: 3.5rem;
+  font-family: var(--main-font);
+  font-size: 3rem;
   margin: 0;
-  color: var(--primary-color);
-  padding: var(--text-padding);
   font-weight: bold;
-  box-sizing: border-box;
+  padding: 0.5rem;
+  transition: color var(--transition-speed);
+}
+
+.header-content h1:hover {
+  color: var(--highlight-color);
 }
 
 /* Main Content Section */
@@ -66,11 +72,11 @@ body {
   box-shadow: 0 4px 10px var(--shadow-color);
   width: 100%;
   max-width: 800px;
-  text-align: center;
+  text-align: left;
 }
 
 .home-main h2 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 1rem;
   color: var(--primary-color);
 }
@@ -81,58 +87,117 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.home-main ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-  box-sizing: border-box;
+/* Section Styles */
+
+/* Route Dashboard Section */
+.info-section-R {
+  background-color: #E3F2FD; /* Light Blue */
+  padding: 1rem 1.5rem;
+  border-left: 5px solid var(--primary-color);
+  margin-bottom: 2rem;
+  border-radius: var(--border-radius);
 }
 
-.home-main ul li {
-  display: flex;
-  align-items: center;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  position: relative;
-  padding-left: 2rem;
-  box-sizing: border-box;
-}
-
-.home-main ul li::before {
-  content: "✔";
-  position: absolute;
-  left: 0;
+.info-section-R strong {
   color: var(--primary-color);
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
-.home-main a {
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: color 0.3s ease;
+.info-section-R p {
+  font-size: 1rem;
+  color: var(--text-color);
 }
 
-.home-main a:hover {
-  color: var(--highlight-color);
+/* Addresses Section */
+.info-section-A {
+  background-color: #FFF8E1; /* Light Yellow */
+  padding: 1rem 1.5rem;
+  border-left: 5px solid #FFC107; /* Amber */
+  margin-bottom: 2rem;
+  border-radius: var(--border-radius);
+}
+
+.info-section-A strong {
+  color: #FFC107;
+  font-size: 1.2rem;
+}
+
+.info-section-A p {
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+/* Delivery Management Section */
+.info-section-D {
+  background-color: #F1F8E9; /* Light Green */
+  padding: 1rem 1.5rem;
+  border-left: 5px solid #8BC34A; /* Green */
+  margin-bottom: 2rem;
+  border-radius: var(--border-radius);
+}
+
+.info-section-D strong {
+  color: #8BC34A;
+  font-size: 1.2rem;
+}
+
+.info-section-D p {
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+/* Big Map View Section */
+.info-section-B {
+  background-color: #FBE9E7; /* Light Red */
+  padding: 1rem 1.5rem;
+  border-left: 5px solid #FF5722; /* Deep Orange */
+  margin-bottom: 2rem;
+  border-radius: var(--border-radius);
+}
+
+.info-section-B strong {
+  color: #FF5722;
+  font-size: 1.2rem;
+}
+
+.info-section-B p {
+  font-size: 1rem;
+  color: var(--text-color);
 }
 
 /* Responsive Design for Tablets */
 @media (max-width: 768px) {
   .header-content h1 {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
   }
 
   .home-main {
     padding: 1.5rem;
-    box-sizing: border-box;
   }
 
   .home-main h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
-  .home-main ul li {
-    font-size: 1rem;
+  .info-section-R,
+  .info-section-A,
+  .info-section-D,
+  .info-section-B {
+    padding: 1rem;
+  }
+
+  .info-section-R strong,
+  .info-section-A strong,
+  .info-section-D strong,
+  .info-section-B strong {
+    font-size: 1.1rem;
+  }
+
+  .info-section-R p,
+  .info-section-A p,
+  .info-section-D p,
+  .info-section-B p {
+    font-size: 0.95rem;
   }
 }
 
@@ -144,14 +209,30 @@ body {
 
   .home-main {
     padding: 1rem;
-    box-sizing: border-box;
   }
 
   .home-main h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
 
-  .home-main ul li {
+  .info-section-R,
+  .info-section-A,
+  .info-section-D,
+  .info-section-B {
+    padding: 0.8rem;
+  }
+
+  .info-section-R strong,
+  .info-section-A strong,
+  .info-section-D strong,
+  .info-section-B strong {
+    font-size: 1rem;
+  }
+
+  .info-section-R p,
+  .info-section-A p,
+  .info-section-D p,
+  .info-section-B p {
     font-size: 0.9rem;
   }
 }
