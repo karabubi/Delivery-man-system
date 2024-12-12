@@ -1,9 +1,14 @@
-
-import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Polyline, Marker, Popup } from 'react-leaflet';
-import axios from 'axios';
-import './MapDisplay.css'; 
-import  BackToTop from "./BackToTop.jsx";
+import { useEffect, useState } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Polyline,
+  Marker,
+  Popup,
+} from "react-leaflet";
+import axios from "axios";
+import "./MapDisplay.css";
+import BackToTop from "./BackToTop.jsx";
 
 const MapDisplay = () => {
   const [locations, setLocations] = useState([]);
@@ -24,25 +29,25 @@ const MapDisplay = () => {
             lng: delivery.position_longitude,
           }));
 
+          const validLocations = fetchedLocations.filter(
+            (loc) => loc.lat && loc.lng
+          );
 
-        const validLocations = fetchedLocations.filter(
-          (loc) => loc.lat && loc.lng
-        );
-        setLocations(validLocations);
-        setMapCenter(response.data.startCoordinates || mapCenter); // Set center to Adenauerallee 1 if available
+          setLocations(validLocations);
+          setMapCenter(response.data.startCoordinates || mapCenter); // Set center to Adenauerallee 1 if available
+          setLoading(false);
+        } else {
+          throw new Error("Deliveries data is not in the expected format.");
+        }
+      } catch (error) {
+        console.error("Error fetching delivery locations:", error);
+        setError(`Failed to fetch delivery locations: ${error.message}`);
         setLoading(false);
-      } else {
-        throw new Error("Deliveries data is not in the expected format.");
       }
-    } catch (error) {
-      console.error("Error fetching delivery locations:", error);
-      setError(`Failed to fetch delivery locations: ${error.message}`);
-      setLoading(false);
-    }
-  };
+    };
 
     fetchLocations();
-  }, []);
+  }, [mapCenter]);
 
   // Fetch best route data from the backend
   useEffect(() => {
@@ -54,7 +59,11 @@ const MapDisplay = () => {
           { locations }
         );
 
-        if (response.data && response.data.geometry && response.data.geometry.coordinates) {
+        if (
+          response.data &&
+          response.data.geometry &&
+          response.data.geometry.coordinates
+        ) {
           setTimeData(response.data);
           setRoute(
             response.data.geometry.coordinates.map((coord) => [
@@ -84,27 +93,46 @@ const MapDisplay = () => {
       <div className="map-display-box">
         <h2>Route Information</h2>
         <div className="summary-box">
-          <div><strong>Total Travel Time:</strong> {timeData?.duration}</div>
-          <div><strong>Total Distance:</strong> {timeData?.distance} km</div>
+          <div>
+            <strong>Total Travel Time:</strong> {timeData?.duration}
+          </div>
+          <div>
+            <strong>Total Distance:</strong> {timeData?.distance} km
+          </div>
         </div>
 
         <h2>Ordered Locations</h2>
         <ul className="locations-list">
           {timeData?.orderedLocations?.map((location, index) => (
             <li key={index}>
-              <div><strong>{index + 1}.</strong> {location.address}</div>
+              <div>
+                <strong>{index + 1}.</strong> {location.address}
+              </div>
               {index < timeData.orderedLocations.length - 1 && (
-                <div><strong>Estimated Time:</strong> {location.estimatedTime || "-"}</div>
+                <div>
+                  <strong>Estimated Time:</strong>{" "}
+                  {location.estimatedTime || "-"}
+                </div>
               )}
               {index < timeData.orderedLocations.length - 1 && (
-                <div><strong>From {location.address} to {timeData.orderedLocations[index + 1].address}:</strong> {location.estimatedTime || "-"}</div>
+                <div>
+                  <strong>
+                    From {location.address} to{" "}
+                    {timeData.orderedLocations[index + 1].address}:
+                  </strong>{" "}
+                  {location.estimatedTime || "-"}
+                </div>
               )}
             </li>
           ))}
         </ul>
 
         <div className="map-container">
-          <MapContainer center={[50.73743, 7.098206]} zoom={13} style={{ height: '100%', width: '100%' }}>
+          <MapContainer
+            center={[50.73743, 7.098206]}
+            zoom={13}
+            style={{ height: "100%", width: "100%" }}
+          >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {locations.map((loc, index) => (
               <Marker key={index} position={[loc.lat, loc.lng]}>
@@ -121,3 +149,6 @@ const MapDisplay = () => {
 };
 
 export default MapDisplay;
+
+
+
