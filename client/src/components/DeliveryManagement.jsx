@@ -102,13 +102,15 @@ const DeliveryManagement = () => {
     <div className="container">
       <h2>Delivery Management</h2>
       <p>
-        This page allows you to manage delivery addresses in your system. You can:
+        This page allows you to manage delivery addresses in your system.
       </p>
+      <p><strong>You can:-</strong></p>
       <ul>
         <li><strong>Upload new addresses</strong> via CSV files.</li>
         <li><strong>Edit</strong> existing addresses.</li>
         <li><strong>Delete</strong> unwanted delivery addresses.</li>
       </ul>
+      <h3>The data should contain the following columns: [street name - latitude - longitude]</h3>
 
       {error && <div className="error-message">{error}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
