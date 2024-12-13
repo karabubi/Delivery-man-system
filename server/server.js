@@ -58,7 +58,8 @@ app.post("/api/delivery", async (req, res) => {
 
   if (!address || !positionLatitude || !positionLongitude) {
     return res.status(400).json({
-      error: "Missing required fields. Please provide address, latitude, and longitude.",
+      error:
+        "Missing required fields. Please provide address, latitude, and longitude.",
     });
   }
 
@@ -106,16 +107,25 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
     .on("end", async () => {
       try {
         const existingAddresses = await db("deliveries").pluck("address");
-        const newDeliveries = deliveries.filter((delivery) => !existingAddresses.includes(delivery.address));
+        const newDeliveries = deliveries.filter(
+          (delivery) => !existingAddresses.includes(delivery.address)
+        );
+
+        console.log("newDeliveries", newDeliveries);
+
         if (newDeliveries.length === 0) {
-          return res.status(409).json({ error: "All addresses in the uploaded file already exist." });
+          return res.status(409).json({
+            error: "All addresses in the uploaded file already exist.",
+          });
         }
 
         await db("deliveries").insert(newDeliveries);
         res.status(200).json({ message: "CSV file processed and data saved." });
       } catch (err) {
         console.error("Error inserting CSV data:", err.message);
-        res.status(500).json({ error: "Failed to save CSV data to the database" });
+        res
+          .status(500)
+          .json({ error: "Failed to save CSV data to the database" });
       } finally {
         fs.unlinkSync(filePath);
       }
@@ -131,6 +141,8 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
 app.post("/api/best-route", async (req, res) => {
   const { locations } = req.body;
 
+  console.log("locations", req.body);
+
   // Ensure there are at least two valid locations
   if (!locations || locations.length < 2) {
     return res
@@ -140,6 +152,8 @@ app.post("/api/best-route", async (req, res) => {
 
   // Validate coordinates: ensure no null lat/lng
   const validLocations = locations.filter((loc) => loc.lat && loc.lng);
+
+  console.log("validLocations", validLocations);
 
   if (validLocations.length < 2) {
     return res.status(400).json({
@@ -158,6 +172,7 @@ app.post("/api/best-route", async (req, res) => {
   // Check if the response has valid routes
   try {
     const response = await axios.get(apiUrl);
+    console.log("response", response);
 
     if (
       !response.data ||
@@ -210,6 +225,7 @@ app.post("/api/best-route", async (req, res) => {
       geometry,
     });
   } catch (err) {
+    console.log(err);
     console.error("Error in calculating route:", err.message);
     res
       .status(500)
@@ -273,7 +289,3 @@ app.delete("/api/delete-all-deliveries", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
-
-
-
