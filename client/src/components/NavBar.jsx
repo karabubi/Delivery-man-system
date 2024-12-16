@@ -119,6 +119,20 @@ const NavBar = () => {
                     <Typography sx={{ textAlign: "center" }}>Big Map View</Typography>
                   </MenuItem>
                 ),
+
+
+                isSignedIn && (
+                  <MenuItem
+                    key="diagram"
+                    component={Link}
+                    to="/diagram"
+                    onClick={handleCloseNavMenu}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>Diagram Viewer</Typography>
+                  </MenuItem>
+                ),
+
+
                 isSignedIn ? (
                   <MenuItem key="signout" onClick={handleLogout}>
                     <Typography sx={{ textAlign: "center" }}>Sign Out</Typography>
@@ -155,6 +169,8 @@ const NavBar = () => {
             </Link>
             {isSignedIn ? (
               <>
+
+
                 <Link to="/Dashboard" className="nav-link">
                   Route Dashboard
                 </Link>
@@ -167,6 +183,7 @@ const NavBar = () => {
                 <Link to="/bigmap" className="nav-link">
                   Big Map View
                 </Link>
+                
                 <div className="signIn-container">
                   <UserButton className="sign-out-button" />
                 </div>
@@ -225,4 +242,5 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
 

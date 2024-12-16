@@ -15,7 +15,7 @@ exports.getRoute = async (req, res) => {
     const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
    
-    console.log(`Handling request with commit hash: ${commitHash}`);
+    //console.log(`Handling request with commit hash: ${commitHash}`);
 
     
     const coordinates = locations
