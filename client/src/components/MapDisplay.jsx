@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import {
   MapContainer,
@@ -17,6 +18,7 @@ const MapDisplay = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mapCenter, setMapCenter] = useState([50.73743, 7.098206]);
+
   // Fetch delivery locations from the server
   useEffect(() => {
     const fetchLocations = async () => {
@@ -25,16 +27,30 @@ const MapDisplay = () => {
         if (response.data && Array.isArray(response.data.deliveries)) {
           const fetchedLocations = response.data.deliveries.map((delivery) => ({
             address: delivery.address,
-            lat: delivery.position_latitude,
-            lng: delivery.position_longitude,
+            lat: parseFloat(delivery.position_latitude),
+            lng: parseFloat(delivery.position_longitude),
           }));
 
+          // Filter out invalid coordinates
           const validLocations = fetchedLocations.filter(
-            (loc) => loc.lat && loc.lng
+            (loc) =>
+              !isNaN(loc.lat) &&
+              !isNaN(loc.lng) &&
+              loc.lat !== 0 &&
+              loc.lng !== 0
           );
 
+          if (validLocations.length === 0) {
+            throw new Error("No valid delivery locations available.");
+          }
+
           setLocations(validLocations);
-          setMapCenter(response.data.startCoordinates || mapCenter); // Set center to Adenauerallee 1 if available
+          setMapCenter(
+            response.data.startCoordinates || [
+              validLocations[0].lat,
+              validLocations[0].lng,
+            ]
+          );
           setLoading(false);
         } else {
           throw new Error("Deliveries data is not in the expected format.");
@@ -47,7 +63,7 @@ const MapDisplay = () => {
     };
 
     fetchLocations();
-  }, [mapCenter]);
+  }, []);
 
   // Fetch best route data from the backend
   useEffect(() => {
@@ -59,18 +75,13 @@ const MapDisplay = () => {
           { locations }
         );
 
-        if (
-          response.data &&
-          response.data.geometry &&
-          response.data.geometry.coordinates
-        ) {
-          setTimeData(response.data);
-          setRoute(
-            response.data.geometry.coordinates.map((coord) => [
-              coord[1],
-              coord[0],
-            ])
+        if (response.data?.geometry?.coordinates) {
+          const routeCoordinates = response.data.geometry.coordinates.map(
+            (coord) => [coord[1], coord[0]] // Convert to Leaflet format [lat, lng]
           );
+
+          setRoute(routeCoordinates);
+          setTimeData(response.data);
         } else {
           throw new Error("Route data is invalid or incomplete.");
         }
@@ -80,11 +91,10 @@ const MapDisplay = () => {
       }
     };
 
-    if (locations.length >= 2) {
-      fetchRouteData();
-    }
+    fetchRouteData();
   }, [locations]);
 
+  // Loading/Error States
   if (loading) return <h3 className="loading-message">Loading...</h3>;
   if (error) return <h3 className="loading-message">{error}</h3>;
 
@@ -94,10 +104,10 @@ const MapDisplay = () => {
         <h2>Route Information</h2>
         <div className="summary-box">
           <div>
-            <strong>Total Travel Time:</strong> {timeData?.duration}
+            <strong>Total Travel Time:</strong> {timeData?.duration || "N/A"}
           </div>
           <div>
-            <strong>Total Distance:</strong> {timeData?.distance} km
+            <strong>Total Distance:</strong> {timeData?.distance || "N/A"} km
           </div>
         </div>
 
@@ -109,19 +119,19 @@ const MapDisplay = () => {
                 <strong>{index + 1}.</strong> {location.address}
               </div>
               {index < timeData.orderedLocations.length - 1 && (
-                <div>
-                  <strong>Estimated Time:</strong>{" "}
-                  {location.estimatedTime || "-"}
-                </div>
-              )}
-              {index < timeData.orderedLocations.length - 1 && (
-                <div>
-                  <strong>
-                    From {location.address} to{" "}
-                    {timeData.orderedLocations[index + 1].address}:
-                  </strong>{" "}
-                  {location.estimatedTime || "-"}
-                </div>
+                <>
+                  <div>
+                    <strong>Estimated Time:</strong>{" "}
+                    {location.estimatedTime || "-"}
+                  </div>
+                  <div>
+                    <strong>
+                      From {location.address} to{" "}
+                      {timeData.orderedLocations[index + 1].address}:
+                    </strong>{" "}
+                    {location.estimatedTime || "-"}
+                  </div>
+                </>
               )}
             </li>
           ))}
@@ -129,17 +139,22 @@ const MapDisplay = () => {
 
         <div className="map-container">
           <MapContainer
-            center={[50.73743, 7.098206]}
+            center={mapCenter}
             zoom={13}
             style={{ height: "100%", width: "100%" }}
           >
+            {/* Map Tiles */}
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+            {/* Markers for Locations */}
             {locations.map((loc, index) => (
               <Marker key={index} position={[loc.lat, loc.lng]}>
                 <Popup>{`Location ${index + 1}: ${loc.address}`}</Popup>
               </Marker>
             ))}
-            <Polyline positions={route} color="blue" />
+
+            {/* Route as Polyline */}
+            {route.length > 0 && <Polyline positions={route} color="blue" />}
           </MapContainer>
           <BackToTop />
         </div>
@@ -149,6 +164,3 @@ const MapDisplay = () => {
 };
 
 export default MapDisplay;
-
-
-

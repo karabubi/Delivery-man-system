@@ -23,8 +23,7 @@ const getRoute = async (req, res) => {
 
     const response = await axios.get(osrmUrl);
     const responseCopy = await axios.get(osrmUrl);
-    console.log("response", response, "responseCopy", responseCopy);
-    console.log("response", response);
+    
     if (
       !response.data ||
       !response.data.routes ||

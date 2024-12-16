@@ -19,7 +19,7 @@ router.post('/best-route', async (req, res) => {
   try {
     const response = await axios.get(osrmUrl);
 
-    console.log("OSRM Response:", JSON.stringify(response.data, null, 2));
+    //console.log("OSRM Response:", JSON.stringify(response.data, null, 2));
 
     if (!response.data || !response.data.routes || response.data.routes.length === 0) {
       return res.status(404).json({ error: "No route found." });

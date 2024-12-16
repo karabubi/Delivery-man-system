@@ -1,5 +1,7 @@
+
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const multer = require("multer");
@@ -8,12 +10,13 @@ const fs = require("fs");
 const axios = require("axios");
 const db = require("./util/db-connect");
 const addressesRoute = require("./routes/addresses");
-
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, "build")));
 
 // Set up multer for CSV uploads
 const upload = multer({ dest: "uploads/" });
@@ -29,7 +32,6 @@ app.get("/api/delivery", async (req, res) => {
   try {
     const deliveries = await db("deliveries").select("*");
 
-    // Starting point coordinates for Adenauerallee 1
     const startCoordinates = {
       lat: 50.73743,
       lng: 7.098206,
@@ -40,7 +42,7 @@ app.get("/api/delivery", async (req, res) => {
     }
 
     res.status(200).json({
-      startCoordinates, // Include the start location for Adenauerallee 1
+      startCoordinates,
       deliveries,
     });
   } catch (err) {
@@ -58,8 +60,7 @@ app.post("/api/delivery", async (req, res) => {
 
   if (!address || !positionLatitude || !positionLongitude) {
     return res.status(400).json({
-      error:
-        "Missing required fields. Please provide address, latitude, and longitude.",
+      error: "Missing required fields. Please provide address, latitude, and longitude.",
     });
   }
 
@@ -111,8 +112,6 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
           (delivery) => !existingAddresses.includes(delivery.address)
         );
 
-        console.log("newDeliveries", newDeliveries);
-
         if (newDeliveries.length === 0) {
           return res.status(409).json({
             error: "All addresses in the uploaded file already exist.",
@@ -123,9 +122,7 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
         res.status(200).json({ message: "CSV file processed and data saved." });
       } catch (err) {
         console.error("Error inserting CSV data:", err.message);
-        res
-          .status(500)
-          .json({ error: "Failed to save CSV data to the database" });
+        res.status(500).json({ error: "Failed to save CSV data to the database" });
       } finally {
         fs.unlinkSync(filePath);
       }
@@ -137,50 +134,37 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
     });
 });
 
-// Calculate Best Route (Updated for proper validation)
+// Calculate Best Route (Driving and fallback to Walking)
 app.post("/api/best-route", async (req, res) => {
   const { locations } = req.body;
 
-  console.log("locations", req.body);
-
-  // Ensure there are at least two valid locations
   if (!locations || locations.length < 2) {
-    return res
-      .status(400)
-      .json({ error: "At least two locations are required." });
+    return res.status(400).json({ error: "At least two locations are required." });
   }
 
-  // Validate coordinates: ensure no null lat/lng
   const validLocations = locations.filter((loc) => loc.lat && loc.lng);
-
-  console.log("validLocations", validLocations);
-
   if (validLocations.length < 2) {
     return res.status(400).json({
       error: "Invalid locations. All locations must have valid lat/lng values.",
     });
   }
 
-  // Format coordinates for OSRM API
-  const coordinates = validLocations
-    .map((loc) => `${loc.lng},${loc.lat}`)
-    .join(";");
-  const osrmBaseUrl =
-    process.env.OSRM_BASE_URL || "http://router.project-osrm.org";
-  const apiUrl = `${osrmBaseUrl}/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
+  const coordinates = validLocations.map((loc) => `${loc.lng},${loc.lat}`).join(";");
+  const osrmBaseUrl = process.env.OSRM_BASE_URL || "http://router.project-osrm.org";
 
-  // Check if the response has valid routes
+  const drivingApiUrl = `${osrmBaseUrl}/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
+  const walkingApiUrl = `${osrmBaseUrl}/route/v1/walking/${coordinates}?overview=full&geometries=geojson`;
+
   try {
-    const response = await axios.get(apiUrl);
-    console.log("response", response);
+    let response = await axios.get(drivingApiUrl);
 
-    if (
-      !response.data ||
-      !response.data.routes ||
-      response.data.routes.length === 0
-    ) {
-      console.error("No route found in OSRM response:", response.data);
-      return res.status(404).json({ error: "No route found." });
+    if (!response.data || !response.data.routes || response.data.routes.length === 0) {
+      console.warn("No driving route found. Attempting walking route.");
+      response = await axios.get(walkingApiUrl);
+    }
+
+    if (!response.data || !response.data.routes || response.data.routes.length === 0) {
+      return res.status(404).json({ error: "No route found for driving or walking." });
     }
 
     const route = response.data.routes[0];
@@ -225,11 +209,8 @@ app.post("/api/best-route", async (req, res) => {
       geometry,
     });
   } catch (err) {
-    console.log(err);
     console.error("Error in calculating route:", err.message);
-    res
-      .status(500)
-      .json({ error: "Failed to calculate route", details: err.message });
+    res.status(500).json({ error: "Failed to calculate route.", details: err.message });
   }
 });
 
@@ -286,6 +267,14 @@ app.delete("/api/delete-all-deliveries", async (req, res) => {
   }
 });
 
+// Catch-all route for React
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "build", "index.html"));
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+
+
