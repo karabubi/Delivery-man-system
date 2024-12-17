@@ -138,9 +138,11 @@ app.post("/api/upload-csv", upload.single("file"), async (req, res) => {
 app.post("/api/best-route", async (req, res) => {
   const { locations } = req.body;
 
+
   if (!locations || locations.length < 2) {
     return res.status(400).json({ error: "At least two locations are required." });
   }
+
 
   const validLocations = locations.filter((loc) => loc.lat && loc.lng);
   if (validLocations.length < 2) {
@@ -149,6 +151,7 @@ app.post("/api/best-route", async (req, res) => {
     });
   }
 
+  
   const coordinates = validLocations.map((loc) => `${loc.lng},${loc.lat}`).join(";");
   const osrmBaseUrl = process.env.OSRM_BASE_URL || "http://router.project-osrm.org";
 
