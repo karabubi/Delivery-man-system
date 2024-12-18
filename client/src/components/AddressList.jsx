@@ -3,7 +3,7 @@ import axios from "axios";
 import "./AddressList.css";
 import BackToTop from "./BackToTop";
 
-const API_URL = import.meta.env.API_URL;
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const AddressList = () => {
   const [addresses, setAddresses] = useState([]);
@@ -12,7 +12,7 @@ const AddressList = () => {
     const fetchAddresses = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${API_URL}/api/delivery`, {
+        const response = await axios.get(`${VITE_API_URL}/api/delivery`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         // Extract deliveries from the response

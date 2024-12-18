@@ -10,7 +10,7 @@ import axios from "axios";
 import "./MapDisplay.css";
 import BackToTop from "./BackToTop.jsx";
 
-const { API_URL } = import.meta.env;
+const { VITE_API_URL } = import.meta.env;
 
 const MapDisplay = () => {
   const [locations, setLocations] = useState([]);
@@ -24,7 +24,7 @@ const MapDisplay = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/delivery`);
+        const response = await axios.get(`${VITE_API_URL}/api/delivery`);
         if (response.data && Array.isArray(response.data.deliveries)) {
           const fetchedLocations = response.data.deliveries.map((delivery) => ({
             address: delivery.address,
@@ -71,10 +71,9 @@ const MapDisplay = () => {
     const fetchRouteData = async () => {
       if (locations.length < 2) return;
       try {
-        const response = await axios.post(
-          `${API_URL}/api/best-route`,
-          { locations }
-        );
+        const response = await axios.post(`${VITE_API_URL}/api/best-route`, {
+          locations,
+        });
 
         if (response.data?.geometry?.coordinates) {
           const routeCoordinates = response.data.geometry.coordinates.map(

@@ -10,7 +10,7 @@ import {
 import "./BigMapView.css";
 import BackToTop from "./BackToTop";
 
-const { API_URL } = import.meta.env;
+const { VITE_API_URL } = import.meta.env;
 
 const BigMapView = () => {
   const [locations, setLocations] = useState([]);
@@ -22,7 +22,7 @@ const BigMapView = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/delivery`);
+        const response = await axios.get(`${VITE_API_URL}/api/delivery`);
         console.log("API Response:", response.data); // Log the response for debugging
 
         // Assuming the API response contains an array under the 'deliveries' key
@@ -60,7 +60,7 @@ const BigMapView = () => {
       if (locations.length < 2) return;
 
       try {
-        const response = await axios.post(`${API_URL}/api/best-route`, {
+        const response = await axios.post(`${VITE_API_URL}/api/best-route`, {
           locations,
         });
 
