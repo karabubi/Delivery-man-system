@@ -7,7 +7,6 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@clerk/clerk-sdk-node": "^5.0.66",
     "@mapbox/polyline": "^1.2.1",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
@@ -26,11 +25,7 @@
     "papaparse": "^5.4.1",
     "pg": "^8.13.1",
     "polyline": "^0.2.0",
-    "postgis": "^1.0.5",
-    "react": "^18.3.1",
-    "react-drawio": "^1.0.1",
-    "react-leaflet": "^4.2.1",
-    "react-router-dom": "^7.0.1"
+    "postgis": "^1.0.5"
   },
   "devDependencies": {
     "express-request-id": "*",
