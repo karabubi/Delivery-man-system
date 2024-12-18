@@ -121,17 +121,6 @@ const NavBar = () => {
                 ),
 
 
-                isSignedIn && (
-                  <MenuItem
-                    key="diagram"
-                    component={Link}
-                    to="/diagram"
-                    onClick={handleCloseNavMenu}
-                  >
-                    <Typography sx={{ textAlign: "center" }}>Diagram Viewer</Typography>
-                  </MenuItem>
-                ),
-
 
                 isSignedIn ? (
                   <MenuItem key="signout" onClick={handleLogout}>
