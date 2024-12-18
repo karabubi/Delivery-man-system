@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   MapContainer,
@@ -10,6 +9,8 @@ import {
 import axios from "axios";
 import "./MapDisplay.css";
 import BackToTop from "./BackToTop.jsx";
+
+const { API_URL } = import.meta.env;
 
 const MapDisplay = () => {
   const [locations, setLocations] = useState([]);
@@ -23,7 +24,7 @@ const MapDisplay = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/delivery");
+        const response = await axios.get(`${API_URL}/api/delivery`);
         if (response.data && Array.isArray(response.data.deliveries)) {
           const fetchedLocations = response.data.deliveries.map((delivery) => ({
             address: delivery.address,
@@ -71,7 +72,7 @@ const MapDisplay = () => {
       if (locations.length < 2) return;
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/best-route",
+          `${API_URL}/api/best-route`,
           { locations }
         );
 

@@ -1,8 +1,10 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./AddressList.css";
 import BackToTop from "./BackToTop";
+
+const API_URL = import.meta.env.API_URL;
+
 const AddressList = () => {
   const [addresses, setAddresses] = useState([]);
 
@@ -10,7 +12,7 @@ const AddressList = () => {
     const fetchAddresses = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3000/api/delivery", {
+        const response = await axios.get(`${API_URL}/api/delivery`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         // Extract deliveries from the response
@@ -46,10 +48,8 @@ const AddressList = () => {
         ))}
       </ul>
       <BackToTop />
-
     </div>
   );
 };
 
 export default AddressList;
-

@@ -1,9 +1,17 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  Popup,
+} from "react-leaflet";
 import "./BigMapView.css";
 import BackToTop from "./BackToTop";
+
+const { API_URL } = import.meta.env;
+
 const BigMapView = () => {
   const [locations, setLocations] = useState([]);
   const [route, setRoute] = useState([]);
@@ -14,8 +22,8 @@ const BigMapView = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/delivery");
-        console.log('API Response:', response.data); // Log the response for debugging
+        const response = await axios.get(`${API_URL}/api/delivery`);
+        console.log("API Response:", response.data); // Log the response for debugging
 
         // Assuming the API response contains an array under the 'deliveries' key
         const fetchedLocations = Array.isArray(response.data.deliveries)
@@ -52,10 +60,9 @@ const BigMapView = () => {
       if (locations.length < 2) return;
 
       try {
-        const response = await axios.post(
-          "http://localhost:3000/api/best-route",
-          { locations }
-        );
+        const response = await axios.post(`${API_URL}/api/best-route`, {
+          locations,
+        });
 
         if (
           response.data &&
@@ -108,13 +115,15 @@ const BigMapView = () => {
       {timeData && (
         <div className="route-summary-big">
           <h4>Route Summary</h4>
-          <p><strong>Total Travel Time:</strong> {timeData.duration}</p>
-          <p><strong>Total Distance:</strong> {timeData.distance} km</p>
+          <p>
+            <strong>Total Travel Time:</strong> {timeData.duration}
+          </p>
+          <p>
+            <strong>Total Distance:</strong> {timeData.distance} km
+          </p>
           <BackToTop />
         </div>
       )}
-    
-
     </div>
   );
 };

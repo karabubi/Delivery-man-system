@@ -1,8 +1,9 @@
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./DeliveryManagement.css";
 import BackToTop from "./BackToTop";
+
+const { API_URL } = import.meta.env;
 
 const DeliveryManagement = () => {
   const [deliveries, setDeliveries] = useState([]);
@@ -14,7 +15,7 @@ const DeliveryManagement = () => {
   useEffect(() => {
     const fetchDeliveries = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/delivery");
+        const response = await axios.get(`${API_URL}/api/delivery`);
         if (response.data && Array.isArray(response.data.deliveries)) {
           setDeliveries(response.data.deliveries);
         } else {
@@ -40,21 +41,25 @@ const DeliveryManagement = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:3000/api/upload-csv", formData, {
+      const response = await axios.post(`${API_URL}/api/upload-csv`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.status === 200) {
         setError("");
         setSuccessMessage("File uploaded successfully!");
-        const deliveryResponse = await axios.get("http://localhost:3000/api/delivery");
+        const deliveryResponse = await axios.get(`${API_URL}/api/delivery`);
         setDeliveries(deliveryResponse.data.deliveries);
       }
     } catch (err) {
       if (err.response?.status === 409) {
-        setError("Duplicate addresses found in the uploaded file. No data was saved.");
+        setError(
+          "Duplicate addresses found in the uploaded file. No data was saved."
+        );
       } else {
-        setError(err.response?.data?.error || "Error uploading file. Please try again.");
+        setError(
+          err.response?.data?.error || "Error uploading file. Please try again."
+        );
       }
     } finally {
       setLoading(false);
@@ -64,7 +69,7 @@ const DeliveryManagement = () => {
   // Handle adding a single delivery
   const handleAddDelivery = async (newDelivery) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/delivery", newDelivery);
+      const response = await axios.post(`${API_URL}/api/delivery`, newDelivery);
       setDeliveries((prev) => [...prev, response.data]);
       setSuccessMessage("Delivery added successfully!");
     } catch (err) {
@@ -79,7 +84,7 @@ const DeliveryManagement = () => {
   // Handle deleting a single delivery
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/delivery/${id}`);
+      await axios.delete(`${API_URL}/api/delivery/${id}`);
       setDeliveries((prev) => prev.filter((delivery) => delivery.id !== id));
       setSuccessMessage("Delivery deleted successfully.");
     } catch (err) {
@@ -90,7 +95,7 @@ const DeliveryManagement = () => {
   // Handle deleting all deliveries
   const handleDeleteAll = async () => {
     try {
-      await axios.delete("http://localhost:3000/api/delete-all-deliveries");
+      await axios.delete(`${API_URL}/api/delete-all-deliveries`);
       setDeliveries([]);
       setSuccessMessage("All deliveries deleted.");
     } catch (err) {
@@ -101,19 +106,30 @@ const DeliveryManagement = () => {
   return (
     <div className="container">
       <h2>Delivery Management</h2>
+      <p>This page allows you to manage delivery addresses in your system.</p>
       <p>
-        This page allows you to manage delivery addresses in your system.
+        <strong>You can:-</strong>
       </p>
-      <p><strong>You can:-</strong></p>
       <ul>
-        <li><strong>Upload new addresses</strong> via CSV files.</li>
-        <li><strong>Edit</strong> existing addresses.</li>
-        <li><strong>Delete</strong> unwanted delivery addresses.</li>
+        <li>
+          <strong>Upload new addresses</strong> via CSV files.
+        </li>
+        <li>
+          <strong>Edit</strong> existing addresses.
+        </li>
+        <li>
+          <strong>Delete</strong> unwanted delivery addresses.
+        </li>
       </ul>
-      <h3>The data should contain the following columns: [street name - latitude - longitude]</h3>
+      <h3>
+        The data should contain the following columns: [street name - latitude -
+        longitude]
+      </h3>
 
       {error && <div className="error-message">{error}</div>}
-      {successMessage && <div className="success-message">{successMessage}</div>}
+      {successMessage && (
+        <div className="success-message">{successMessage}</div>
+      )}
 
       <input type="file" accept=".csv" onChange={handleFileUpload} />
       {loading && <p className="uploading-text">Uploading...</p>}
