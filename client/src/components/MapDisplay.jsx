@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import {
   MapContainer,
@@ -7,6 +9,7 @@ import {
   Popup,
 } from "react-leaflet";
 import axios from "axios";
+import { SignedIn, useAuth } from "@clerk/clerk-react"; // Import Clerk components
 import "./MapDisplay.css";
 import BackToTop from "./BackToTop.jsx";
 
@@ -19,12 +22,16 @@ const MapDisplay = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mapCenter, setMapCenter] = useState([50.73743, 7.098206]);
+  const { getToken } = useAuth(); // Get the getToken function from Clerk
 
   // Fetch delivery locations from the server
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get(`${VITE_API_URL}/api/delivery`);
+        const token = await getToken(); // Get the authentication token
+        const response = await axios.get(`${VITE_API_URL}/api/delivery`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (response.data && Array.isArray(response.data.deliveries)) {
           const fetchedLocations = response.data.deliveries.map((delivery) => ({
             address: delivery.address,
@@ -64,16 +71,21 @@ const MapDisplay = () => {
     };
 
     fetchLocations();
-  }, []);
+  }, [getToken]);
 
   // Fetch best route data from the backend
   useEffect(() => {
     const fetchRouteData = async () => {
       if (locations.length < 2) return;
       try {
-        const response = await axios.post(`${VITE_API_URL}/api/best-route`, {
-          locations,
-        });
+        const token = await getToken(); // Get the authentication token
+        const response = await axios.post(
+          `${VITE_API_URL}/api/best-route`,
+          { locations },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (response.data?.geometry?.coordinates) {
           const routeCoordinates = response.data.geometry.coordinates.map(
@@ -92,74 +104,76 @@ const MapDisplay = () => {
     };
 
     fetchRouteData();
-  }, [locations]);
+  }, [locations, getToken]);
 
   // Loading/Error States
   if (loading) return <h3 className="loading-message">Loading...</h3>;
   if (error) return <h3 className="loading-message">{error}</h3>;
 
   return (
-    <div className="map-display-container">
-      <div className="map-display-box">
-        <h2>Route Information</h2>
-        <div className="summary-box">
-          <div>
-            <strong>Total Travel Time:</strong> {timeData?.duration || "N/A"}
+    <SignedIn>
+      <div className="map-display-container">
+        <div className="map-display-box">
+          <h2>Route Information</h2>
+          <div className="summary-box">
+            <div>
+              <strong>Total Travel Time:</strong> {timeData?.duration || "N/A"}
+            </div>
+            <div>
+              <strong>Total Distance:</strong> {timeData?.distance || "N/A"} km
+            </div>
           </div>
-          <div>
-            <strong>Total Distance:</strong> {timeData?.distance || "N/A"} km
-          </div>
-        </div>
 
-        <h2>Ordered Locations</h2>
-        <ul className="locations-list">
-          {timeData?.orderedLocations?.map((location, index) => (
-            <li key={index}>
-              <div>
-                <strong>{index + 1}.</strong> {location.address}
-              </div>
-              {index < timeData.orderedLocations.length - 1 && (
-                <>
-                  <div>
-                    <strong>Estimated Time:</strong>{" "}
-                    {location.estimatedTime || "-"}
-                  </div>
-                  <div>
-                    <strong>
-                      From {location.address} to{" "}
-                      {timeData.orderedLocations[index + 1].address}:
-                    </strong>{" "}
-                    {location.estimatedTime || "-"}
-                  </div>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-
-        <div className="map-container">
-          <MapContainer
-            center={mapCenter}
-            zoom={13}
-            style={{ height: "100%", width: "100%" }}
-          >
-            {/* Map Tiles */}
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-            {/* Markers for Locations */}
-            {locations.map((loc, index) => (
-              <Marker key={index} position={[loc.lat, loc.lng]}>
-                <Popup>{`Location ${index + 1}: ${loc.address}`}</Popup>
-              </Marker>
+          <h2>Ordered Locations</h2>
+          <ul className="locations-list">
+            {timeData?.orderedLocations?.map((location, index) => (
+              <li key={index}>
+                <div>
+                  <strong>{index + 1}.</strong> {location.address}
+                </div>
+                {index < timeData.orderedLocations.length - 1 && (
+                  <>
+                    <div>
+                      <strong>Estimated Time:</strong>{" "}
+                      {location.estimatedTime || "-"}
+                    </div>
+                    <div>
+                      <strong>
+                        From {location.address} to{" "}
+                        {timeData.orderedLocations[index + 1].address}:
+                      </strong>{" "}
+                      {location.estimatedTime || "-"}
+                    </div>
+                  </>
+                )}
+              </li>
             ))}
+          </ul>
 
-            {/* Route as Polyline */}
-            {route.length > 0 && <Polyline positions={route} color="blue" />}
-          </MapContainer>
-          <BackToTop />
+          <div className="map-container">
+            <MapContainer
+              center={mapCenter}
+              zoom={13}
+              style={{ height: "100%", width: "100%" }}
+            >
+              {/* Map Tiles */}
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+              {/* Markers for Locations */}
+              {locations.map((loc, index) => (
+                <Marker key={index} position={[loc.lat, loc.lng]}>
+                  <Popup>{`Location ${index + 1}: ${loc.address}`}</Popup>
+                </Marker>
+              ))}
+
+              {/* Route as Polyline */}
+              {route.length > 0 && <Polyline positions={route} color="blue" />}
+            </MapContainer>
+            <BackToTop />
+          </div>
         </div>
       </div>
-    </div>
+    </SignedIn>
   );
 };
 

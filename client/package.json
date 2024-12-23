@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.15.5",
+    "@clerk/clerk-react": "^5.20.4",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@mapbox/polyline": "^1.2.1",

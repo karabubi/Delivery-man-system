@@ -1,24 +1,16 @@
-
-
+-- Drop the users table if it exists
 DROP TABLE IF EXISTS users CASCADE;
+
+-- Create the users table
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,               -- Auto-incrementing user ID
-    username VARCHAR(255) NOT NULL,      -- User's username
-    email VARCHAR(255) NOT NULL UNIQUE,  -- User's email
-    password VARCHAR(255) NOT NULL,      -- User's password (hashed)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Account creation time
+    id SERIAL PRIMARY KEY, -- Auto-incrementing user ID
+    name VARCHAR(255) NOT NULL, -- User's name
+    email VARCHAR(255) UNIQUE NOT NULL -- User's email
 );
+-- Insert a user to reference in the deliveries table
+INSERT INTO users (name, email)
+VALUES ('saleh Alkarabubi', 'karabubi66@yahoo.com');
 
 
--- Register a new user
-INSERT INTO users (username, email, password)
-VALUES ('new_user', 'user@example.com', 'hashed_password');
-
--- Insert a new user (password is plaintext here for example purposes)
-INSERT INTO users (username, email, password)
-VALUES ('saleh', 'karabubi66@yahoo.com', '123');
-
--- Check user credentials for login
-SELECT id, username, password
-FROM users
-WHERE username = 'user_input' OR email = 'user_input';
+-- Verify the user is inserted
+SELECT * FROM users;
