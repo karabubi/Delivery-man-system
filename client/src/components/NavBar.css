@@ -223,5 +223,14 @@ body {
  box-sizing: border-box;
 }
 
-
+/* Welcome message styling */
+.welcome-message {
+  font-family: var(--main-font);
+  font-size: 1.2rem;
+  color:white;
+  background-color:green;;
+  border-radius: var(--border-radius);
+  padding: 10px 15px;
+  margin-right: 10px;
+}
 
