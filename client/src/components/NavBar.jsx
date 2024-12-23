@@ -1,4 +1,5 @@
 
+
 import * as React from "react";
 import { useUser, useClerk, SignedIn, SignedOut } from "@clerk/clerk-react";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
@@ -17,7 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 import "./NavBar.css";
 
 const NavBar = () => {
-  const { isSignedIn } = useUser();
+  const { user } = useUser();
   const { signOut } = useClerk();
   const navigate = useNavigate();
 
@@ -84,7 +85,9 @@ const NavBar = () => {
                   to="/Dashboard"
                   onClick={handleCloseNavMenu}
                 >
-                  <Typography sx={{ textAlign: "center" }}>Route Dashboard</Typography>
+                  <Typography sx={{ textAlign: "center" }}>
+                    Route Dashboard
+                  </Typography>
                 </MenuItem>
                 <MenuItem
                   component={Link}
@@ -98,7 +101,9 @@ const NavBar = () => {
                   to="/manage"
                   onClick={handleCloseNavMenu}
                 >
-                  <Typography sx={{ textAlign: "center" }}>Delivery Management</Typography>
+                  <Typography sx={{ textAlign: "center" }}>
+                    Delivery Management
+                  </Typography>
                 </MenuItem>
                 <MenuItem
                   component={Link}
@@ -137,6 +142,11 @@ const NavBar = () => {
             sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
             className="navbar-links-left"
           >
+            <SignedIn>
+              <Typography className="welcome-message">
+                Welcome, {user?.firstName || 'User'}!
+              </Typography>
+            </SignedIn>
             <Link to="/" className="nav-link">
               Home
             </Link>
@@ -210,6 +220,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-
-
