@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -7,6 +9,7 @@ import {
   Polyline,
   Popup,
 } from "react-leaflet";
+import { SignedIn, useAuth } from "@clerk/clerk-react"; // Import Clerk components
 import "./BigMapView.css";
 import BackToTop from "./BackToTop";
 
@@ -18,11 +21,15 @@ const BigMapView = () => {
   const [timeData, setTimeData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { getToken } = useAuth(); // Get the getToken function from Clerk
 
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get(`${VITE_API_URL}/api/delivery`);
+        const token = await getToken(); // Get the authentication token
+        const response = await axios.get(`${VITE_API_URL}/api/delivery`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         console.log("API Response:", response.data); // Log the response for debugging
 
         // Assuming the API response contains an array under the 'deliveries' key
@@ -53,16 +60,21 @@ const BigMapView = () => {
     };
 
     fetchLocations();
-  }, []);
+  }, [getToken]);
 
   useEffect(() => {
     const fetchRouteData = async () => {
       if (locations.length < 2) return;
 
       try {
-        const response = await axios.post(`${VITE_API_URL}/api/best-route`, {
-          locations,
-        });
+        const token = await getToken(); // Get the authentication token
+        const response = await axios.post(
+          `${VITE_API_URL}/api/best-route`,
+          { locations },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (
           response.data &&
@@ -88,43 +100,45 @@ const BigMapView = () => {
     if (locations.length >= 2) {
       fetchRouteData();
     }
-  }, [locations]);
+  }, [locations, getToken]);
 
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>{error}</h3>;
 
   return (
-    <div className="big-map-view">
-      <h1>Delivery Route and Map</h1>
-      <div className="map-container-box-big">
-        <MapContainer
-          center={[50.73743, 7.098206]}
-          zoom={13}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {locations.map((loc, index) => (
-            <Marker key={loc.address} position={[loc.lat, loc.lng]}>
-              <Popup>{`Location ${index + 1}: ${loc.address}`}</Popup>
-            </Marker>
-          ))}
-          {route.length > 0 && <Polyline positions={route} color="blue" />}
-        </MapContainer>
-      </div>
-
-      {timeData && (
-        <div className="route-summary-big">
-          <h4>Route Summary</h4>
-          <p>
-            <strong>Total Travel Time:</strong> {timeData.duration}
-          </p>
-          <p>
-            <strong>Total Distance:</strong> {timeData.distance} km
-          </p>
-          <BackToTop />
+    <SignedIn>
+      <div className="big-map-view">
+        <h1>Delivery Route and Map</h1>
+        <div className="map-container-box-big">
+          <MapContainer
+            center={[50.73743, 7.098206]}
+            zoom={13}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {locations.map((loc, index) => (
+              <Marker key={loc.address} position={[loc.lat, loc.lng]}>
+                <Popup>{`Location ${index + 1}: ${loc.address}`}</Popup>
+              </Marker>
+            ))}
+            {route.length > 0 && <Polyline positions={route} color="blue" />}
+          </MapContainer>
         </div>
-      )}
-    </div>
+
+        {timeData && (
+          <div className="route-summary-big">
+            <h4>Route Summary</h4>
+            <p>
+              <strong>Total Travel Time:</strong> {timeData.duration}
+            </p>
+            <p>
+              <strong>Total Distance:</strong> {timeData.distance} km
+            </p>
+            <BackToTop />
+          </div>
+        )}
+      </div>
+    </SignedIn>
   );
 };
 

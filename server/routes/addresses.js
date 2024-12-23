@@ -1,42 +1,19 @@
+
 const express = require("express");
 const axios = require("axios");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { ClerkExpressRequireAuth } = require("@clerk/clerk-sdk-node");
 const router = express.Router();
 const db = require("../util/db-connect.js");
 
-const generateSampleAddresses = async () => {
-  const url = "https://nominatim.openstreetmap.org/search";
-  const params = {
-    city: "Bonn",
-    country: "Germany",
-    street: "",
-    format: "json",
-    limit: 100,
-  };
-
-  const addresses = [];
-  for (let i = 1; i <= 100; i++) {
-    params.street = `${i} Main St`;
-    const response = await axios.get(url, { params });
-    if (response.data.length) {
-      const { display_name, lat, lon } = response.data[0];
-      addresses.push({
-        street: display_name,
-        city: "Bonn",
-        latitude: parseFloat(lat),
-        longitude: parseFloat(lon),
-      });
-    }
-  }
-  return addresses;
-};
-
 // Generate and Save Sample Addresses
-router.post("/generate", async (req, res) => {
+router.post("/generate", ClerkExpressRequireAuth(), async (req, res) => {
   try {
+    const userId = req.auth.userId;
     const addresses = await generateSampleAddresses();
     // Assuming you're using Knex, save bulk addresses to the database
-    await knex("locations").insert(addresses);
+    await db("locations").insert(
+      addresses.map(address => ({ ...address, user_id: userId }))
+    );
     res.status(201).json({
       message: "Sample addresses generated and saved successfully",
       addresses,
@@ -50,26 +27,22 @@ router.post("/generate", async (req, res) => {
 });
 
 // Route to get all addresses from the database
-router.get("/addresses", async (req, res) => {
+router.get("/addresses", ClerkExpressRequireAuth(), async (req, res) => {
   try {
-    const addresses = await getAllAddresses(); // Fetch addresses using the Knex function
+    const userId = req.auth.userId;
+    const addresses = await getAllAddresses(userId); // Fetch addresses using the Knex function
     res.status(200).json({ addresses });
   } catch (err) {
-    res
-      .status(400)
-      .json({ error: "Error fetching addresses", details: err.message });
+    res.status(400).json({ error: "Error fetching addresses", details: err.message });
   }
 });
 
 // Function to fetch all addresses from PostgreSQL
-const getAllAddresses = async () => {
+const getAllAddresses = async (userId) => {
   try {
-    const addresses = await db("locations").select(
-      "address",
-      "latitude",
-      "longitude"
-    );
-    console.log(addresses);
+    const addresses = await db("locations")
+      .where("user_id", userId)
+      .select("address", "latitude", "longitude");
     return addresses;
   } catch (err) {
     console.error("Error fetching addresses:", err);
@@ -78,14 +51,13 @@ const getAllAddresses = async () => {
 };
 
 // Route to get all addresses from the database
-router.get("/", async (req, res) => {
+router.get("/", ClerkExpressRequireAuth(), async (req, res) => {
   try {
-    const addresses = await getAllAddresses();
+    const userId = req.auth.userId;
+    const addresses = await getAllAddresses(userId);
     res.status(200).json({ addresses });
   } catch (err) {
-    res
-      .status(400)
-      .json({ error: "Error fetching addresses", details: err.message });
+    res.status(400).json({ error: "Error fetching addresses", details: err.message });
   }
 });
 

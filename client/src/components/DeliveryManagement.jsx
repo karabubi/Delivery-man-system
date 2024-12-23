@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { SignedIn, useAuth } from "@clerk/clerk-react"; // Import Clerk components
 import "./DeliveryManagement.css";
 import BackToTop from "./BackToTop";
 
@@ -10,12 +12,24 @@ const DeliveryManagement = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const { getToken } = useAuth(); // Get the getToken function from Clerk
 
   // Fetch deliveries from the backend
   useEffect(() => {
     const fetchDeliveries = async () => {
       try {
-        const response = await axios.get(`${VITE_API_URL}/api/delivery`);
+        const token = await getToken(); // Get the authentication token
+        console.log(
+          "Fetching deliveries from:",
+          `${VITE_API_URL}/api/delivery`
+        );
+        const response = await axios.get(`${VITE_API_URL}/api/delivery`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("Deliveries response:", response);
         if (response.data && Array.isArray(response.data.deliveries)) {
           setDeliveries(response.data.deliveries);
         } else {
@@ -27,7 +41,8 @@ const DeliveryManagement = () => {
       }
     };
     fetchDeliveries();
-  }, []);
+  }, [getToken]);
+  console.log("token getToken", getToken);
 
   // Handle file upload
   const handleFileUpload = async (e) => {
@@ -41,11 +56,16 @@ const DeliveryManagement = () => {
 
     try {
       setLoading(true);
+      const token = await getToken(); // Get the authentication token
+      console.log("Uploading CSV to:", `${VITE_API_URL}/api/upload-csv`);
       const response = await axios.post(
         `${VITE_API_URL}/api/upload-csv`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -53,7 +73,12 @@ const DeliveryManagement = () => {
         setError("");
         setSuccessMessage("File uploaded successfully!");
         const deliveryResponse = await axios.get(
-          `${VITE_API_URL}/api/delivery`
+          `${VITE_API_URL}/api/delivery`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setDeliveries(deliveryResponse.data.deliveries);
       }
@@ -75,9 +100,16 @@ const DeliveryManagement = () => {
   // Handle adding a single delivery
   const handleAddDelivery = async (newDelivery) => {
     try {
+      const token = await getToken(); // Get the authentication token
+      console.log("Adding delivery to:", `${VITE_API_URL}/api/delivery`);
       const response = await axios.post(
         `${VITE_API_URL}/api/delivery`,
-        newDelivery
+        newDelivery,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setDeliveries((prev) => [...prev, response.data]);
       setSuccessMessage("Delivery added successfully!");
@@ -90,10 +122,47 @@ const DeliveryManagement = () => {
     }
   };
 
+  // Handle updating a single delivery
+  const handleUpdateDelivery = async (id, updatedDelivery) => {
+    try {
+      const token = await getToken(); // Get the authentication token
+      console.log(
+        "Updating delivery at:",
+        `${VITE_API_URL}/api/delivery/${id}`
+      );
+      const response = await axios.put(
+        `${VITE_API_URL}/api/delivery/${id}`,
+        updatedDelivery,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setDeliveries((prev) =>
+        prev.map((delivery) =>
+          delivery.id === id ? { ...delivery, ...response.data } : delivery
+        )
+      );
+      setSuccessMessage("Delivery updated successfully!");
+    } catch (err) {
+      setError("Error updating delivery. Please try again.");
+    }
+  };
+
   // Handle deleting a single delivery
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${VITE_API_URL}/api/delivery/${id}`);
+      const token = await getToken(); // Get the authentication token
+      console.log(
+        "Deleting delivery at:",
+        `${VITE_API_URL}/api/delivery/${id}`
+      );
+      await axios.delete(`${VITE_API_URL}/api/delivery/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setDeliveries((prev) => prev.filter((delivery) => delivery.id !== id));
       setSuccessMessage("Delivery deleted successfully.");
     } catch (err) {
@@ -104,7 +173,16 @@ const DeliveryManagement = () => {
   // Handle deleting all deliveries
   const handleDeleteAll = async () => {
     try {
-      await axios.delete(`${VITE_API_URL}/api/delete-all-deliveries`);
+      const token = await getToken(); // Get the authentication token
+      console.log(
+        "Deleting all deliveries at:",
+        `${VITE_API_URL}/api/delete-all-deliveries`
+      );
+      await axios.delete(`${VITE_API_URL}/api/delete-all-deliveries`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setDeliveries([]);
       setSuccessMessage("All deliveries deleted.");
     } catch (err) {
@@ -113,69 +191,72 @@ const DeliveryManagement = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Delivery Management</h2>
-      <p>This page allows you to manage delivery addresses in your system.</p>
-      <p>
-        <strong>You can:-</strong>
-      </p>
-      <ul>
-        <li>
-          <strong>Upload new addresses</strong> via CSV files.
-        </li>
-        <li>
-          <strong>Edit</strong> existing addresses.
-        </li>
-        <li>
-          <strong>Delete</strong> unwanted delivery addresses.
-        </li>
-      </ul>
-      <h3>
-        The data should contain the following columns: [street name - latitude -
-        longitude]
-      </h3>
-
-      {error && <div className="error-message">{error}</div>}
-      {successMessage && (
-        <div className="success-message">{successMessage}</div>
-      )}
-
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
-      {loading && <p className="uploading-text">Uploading...</p>}
-
-      <button className="delete-all-btn" onClick={handleDeleteAll}>
-        Delete All Deliveries
-      </button>
-
-      <ul>
-        {deliveries.map((delivery) => (
-          <li key={delivery.id}>
-            <span>{delivery.address}</span>
-            <button
-              onClick={() =>
-                handleAddDelivery({
-                  address: prompt("Enter new address", delivery.address),
-                  positionLatitude: delivery.position_latitude,
-                  positionLongitude: delivery.position_longitude,
-                })
-              }
-            >
-              Edit
-            </button>
-            <button onClick={() => handleDelete(delivery.id)}>Delete</button>
+    <SignedIn>
+      <div className="container">
+        <h2>Delivery Management</h2>
+        <p>This page allows you to manage delivery addresses in your system.</p>
+        <ul>
+          <li>
+            <strong>Upload</strong> new addresses via CSV files.
           </li>
-        ))}
-      </ul>
-      <BackToTop />
-    </div>
+          <li>
+            <strong>Edit</strong> existing addresses.
+          </li>
+          <li>
+            <strong>Delete</strong> unwanted delivery addresses.
+          </li>
+        </ul>
+
+        {error && <div className="error-message">{error}</div>}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
+
+        <input type="file" accept=".csv" onChange={handleFileUpload} />
+        {loading && <p className="uploading-text">Uploading...</p>}
+
+        <button className="delete-all-btn" onClick={handleDeleteAll}>
+          Delete All Deliveries
+        </button>
+
+        <ul>
+          {deliveries.map((delivery) => (
+            <li key={delivery.id}>
+              <span>{delivery.address}</span>
+              <button
+                onClick={() => {
+                  const updatedAddress = prompt(
+                    "Enter updated address",
+                    delivery.address
+                  );
+                  const updatedLatitude = prompt(
+                    "Enter updated latitude",
+                    delivery.position_latitude
+                  );
+                  const updatedLongitude = prompt(
+                    "Enter updated longitude",
+                    delivery.position_longitude
+                  );
+                  handleUpdateDelivery(delivery.id, {
+                    address: updatedAddress || delivery.address,
+                    positionLatitude:
+                      updatedLatitude || delivery.position_latitude,
+                    positionLongitude:
+                      updatedLongitude || delivery.position_longitude,
+                  });
+                }}
+              >
+                Update
+              </button>
+              <button onClick={() => handleDelete(delivery.id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+        <BackToTop />
+      </div>
+    </SignedIn>
   );
 };
 
 export default DeliveryManagement;
-
-
-
-
-
-
 

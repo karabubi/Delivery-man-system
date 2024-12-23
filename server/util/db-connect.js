@@ -1,4 +1,5 @@
 const knex = require("knex");
+const knexConfig = require("./knexfile");
 
 const db = knex({
   client: "pg",
@@ -15,3 +16,5 @@ const db = knex({
 });
 
 module.exports = db;
+
+
