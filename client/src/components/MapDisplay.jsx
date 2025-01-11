@@ -1,5 +1,4 @@
 
-
 import { useEffect, useState } from "react";
 import {
   MapContainer,
@@ -129,20 +128,20 @@ const MapDisplay = () => {
             {timeData?.orderedLocations?.map((location, index) => (
               <li key={index}>
                 <div>
-                  <strong>{index + 1}.</strong> {location.address}
+                  <strong>{index + 1}.</strong> {location.name}
                 </div>
                 {index < timeData.orderedLocations.length - 1 && (
                   <>
                     <div>
                       <strong>Estimated Time:</strong>{" "}
-                      {location.estimatedTime || "-"}
+                      {timeData.steps[index].duration || "-"}
                     </div>
                     <div>
                       <strong>
-                        From {location.address} to{" "}
-                        {timeData.orderedLocations[index + 1].address}:
+                        From {timeData.steps[index].from} to{" "}
+                        {timeData.steps[index + 1].to}:
                       </strong>{" "}
-                      {location.estimatedTime || "-"}
+                      {timeData.steps[index].duration || "-"}
                     </div>
                   </>
                 )}
