@@ -1,5 +1,4 @@
 
-
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
@@ -23,6 +22,28 @@ app.use(express.static(path.join(__dirname, "build")));
 
 // Set up multer for CSV uploads
 const upload = multer({ dest: "uploads/" });
+
+// OSRM URLs
+const osrmBaseUrl = process.env.OSRM_BASE_URL || "http://router.project-osrm.org";
+const osrmRouteUrl = `${osrmBaseUrl}/route/v1/driving`;
+const osrmTripUrl = `${osrmBaseUrl}/trip/v1/driving`;
+
+// Helper Function to Convert Seconds to "hours and minutes" Format
+const convertSecondsToHoursMinutes = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.round((seconds % 3600) / 60);
+  return `${hours} hr ${minutes} min`;
+};
+
+// Helper Function to Format Distance
+const formatDistance = (distanceInKm) => {
+  if (distanceInKm < 1) {
+    // Convert to meters if distance is less than 1 km
+    const distanceInMeters = Math.round(distanceInKm * 1000);
+    return `${distanceInMeters} m`;
+  }
+  return `${distanceInKm.toFixed(2)} km`; // Keep distance in km if 1 km or more
+};
 
 // Health Check Route
 app.get("/", (req, res) => {
@@ -69,74 +90,66 @@ app.post("/api/best-route", requireAuth(), async (req, res) => {
 
   const updatedLocations = [startAndEndLocation, ...locations, startAndEndLocation];
   const coordinates = updatedLocations.map((loc) => `${loc.lng},${loc.lat}`).join(";");
-  const osrmBaseUrl = process.env.OSRM_BASE_URL || "http://router.project-osrm.org";
-  const apiUrl = `${osrmBaseUrl}/trip/v1/driving/${coordinates}?roundtrip=true&geometries=geojson&steps=true`;
 
   try {
-    const response = await axios.get(apiUrl);
+    // Step 1: Fetch Optimal Route (Trip API)
+    const tripResponse = await axios.get(
+      `${osrmTripUrl}/${coordinates}?roundtrip=true&geometries=geojson`
+    );
 
-    if (!response.data || !response.data.trips || response.data.trips.length === 0) {
-      return res.status(404).json({ error: "No route found for the provided locations." });
+    if (!tripResponse.data || !tripResponse.data.trips?.length) {
+      return res.status(404).json({ error: "No route found." });
     }
 
-    const trip = response.data.trips[0];
-    const waypoints = response.data.waypoints;
+    const trip = tripResponse.data.trips[0];
+    const orderedIndices = tripResponse.data.waypoints.map((w) => w.waypoint_index);
+    const reorderedLocations = orderedIndices.map((i) => updatedLocations[i]);
 
-    if (!trip || !waypoints) {
-      return res.status(404).json({ error: "No waypoints or trips found in OSRM response." });
+    // Step 2: Calculate Pairwise Travel Times and Distances (Route API)
+    const routePromises = [];
+    for (let i = 0; i < reorderedLocations.length - 1; i++) {
+      const from = reorderedLocations[i];
+      const to = reorderedLocations[i + 1];
+      routePromises.push(
+        axios.get(`${osrmRouteUrl}/${from.lng},${from.lat};${to.lng},${to.lat}?overview=false`)
+      );
     }
 
-    const distanceInKm = (trip.distance / 1000).toFixed(2);
-    const durationInHours = (trip.duration / 3600).toFixed(2);
-
-    // Reorder locations based on waypoint indices
-    const reorderedLocations = waypoints
-      .sort((a, b) => a.waypoint_index - b.waypoint_index)
-      .map((waypoint, index) => {
-        const location = updatedLocations[waypoint.waypoint_index];
-        return {
-          order: index + 1,
-          address: location?.address || waypoint.name || `Stop ${index + 1}`,
-          coordinates: waypoint.location,
-        };
-      });
-
-    // Prepare steps and handle zero durations
-    const steps = trip.legs.map((leg, index) => {
-      const from = reorderedLocations[index]?.address;
-      const to = reorderedLocations[index + 1]?.address || "End";
-      const duration = (leg.duration / 3600).toFixed(2);
-
-      // Fallback for zero duration
-      const safeDuration = duration > 0 ? duration : "0.01";
-
+    const routeResponses = await Promise.all(routePromises);
+    const steps = routeResponses.map((routeRes, idx) => {
+      const leg = routeRes.data.routes[0].legs[0];
       return {
-        from,
-        to,
-        distance: (leg.distance / 1000).toFixed(2) + " km",
-        duration: `${safeDuration} hours`,
+        from: reorderedLocations[idx].address,
+        to: reorderedLocations[idx + 1].address,
+        distance: formatDistance(leg.distance / 1000), // Format distance dynamically
+        duration: convertSecondsToHoursMinutes(leg.duration), // Format duration
       };
     });
 
-    // Enhance reordered locations with estimated times
-    const orderedLocations = reorderedLocations.map((location, index) => {
-      const step = steps[index - 1];
-      return {
-        ...location,
-        estimatedTime: step ? step.duration : "0 hours",
-      };
-    });
+    const totalDistanceInKm = steps.reduce(
+      (sum, step) => sum + parseFloat(step.distance.split(" ")[0]), // Extract numeric value
+      0
+    );
+    const totalDistance = formatDistance(totalDistanceInKm); // Format total distance dynamically
+    const totalDurationInSeconds = steps.reduce(
+      (sum, step) => sum + routeResponses[steps.indexOf(step)].data.routes[0].legs[0].duration,
+      0
+    );
+    const totalDuration = convertSecondsToHoursMinutes(totalDurationInSeconds);
 
     res.status(200).json({
       geometry: trip.geometry,
-      orderedLocations,
-      duration: durationInHours,
-      distance: distanceInKm,
+      orderedLocations: reorderedLocations.map((loc, idx) => ({
+        ...loc,
+        estimatedTime: steps[idx]?.duration || "N/A",
+      })),
+      duration: totalDuration,
+      distance: totalDistance,
       steps,
     });
   } catch (err) {
-    console.error("Error fetching best route:", err.message);
-    res.status(500).json({ error: "Failed to fetch the best route.", details: err.message });
+    console.error("Error calculating best route:", err.message);
+    res.status(500).json({ error: "Failed to calculate the best route.", details: err.message });
   }
 });
 
@@ -271,6 +284,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "build", "index.html"));
 });
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

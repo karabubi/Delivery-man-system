@@ -51,11 +51,16 @@ const MapDisplay = () => {
             throw new Error("No valid delivery locations available.");
           }
 
-          setLocations(validLocations);
+          // Deduplicate locations
+          const uniqueLocations = Array.from(
+            new Map(validLocations.map((loc) => [loc.address, loc])).values()
+          );
+
+          setLocations(uniqueLocations);
           setMapCenter(
             response.data.startCoordinates || [
-              validLocations[0].lat,
-              validLocations[0].lng,
+              uniqueLocations[0].lat,
+              uniqueLocations[0].lng,
             ]
           );
           setLoading(false);
@@ -76,11 +81,17 @@ const MapDisplay = () => {
   useEffect(() => {
     const fetchRouteData = async () => {
       if (locations.length < 2) return;
+
+      // Remove duplicates before sending
+      const uniqueLocations = Array.from(
+        new Map(locations.map((loc) => [loc.address, loc])).values()
+      );
+
       try {
         const token = await getToken(); // Get the authentication token
         const response = await axios.post(
           `${VITE_API_URL}/api/best-route`,
-          { locations },
+          { locations: uniqueLocations },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -119,7 +130,7 @@ const MapDisplay = () => {
               <strong>Total Travel Time:</strong> {timeData?.duration || "N/A"}
             </div>
             <div>
-              <strong>Total Distance:</strong> {timeData?.distance || "N/A"} km
+              <strong>Total Distance:</strong> {timeData?.distance || "N/A"} meters
             </div>
           </div>
 
@@ -128,20 +139,20 @@ const MapDisplay = () => {
             {timeData?.orderedLocations?.map((location, index) => (
               <li key={index}>
                 <div>
-                  <strong>{index + 1}.</strong> {location.name}
+                  <strong>{index + 1}.</strong> {location.address}
                 </div>
                 {index < timeData.orderedLocations.length - 1 && (
                   <>
                     <div>
                       <strong>Estimated Time:</strong>{" "}
-                      {timeData.steps[index].duration || "-"}
+                      {timeData.steps[index]?.duration || "-"}
                     </div>
                     <div>
                       <strong>
-                        From {timeData.steps[index].from} to{" "}
-                        {timeData.steps[index + 1].to}:
+                        From {timeData.steps[index]?.from} to{" "}
+                        {timeData.steps[index]?.to}:
                       </strong>{" "}
-                      {timeData.steps[index].duration || "-"}
+                      {timeData.steps[index]?.duration || "-"}
                     </div>
                   </>
                 )}
@@ -177,3 +188,4 @@ const MapDisplay = () => {
 };
 
 export default MapDisplay;
+
