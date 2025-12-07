@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  # === PostgreSQL Database ===
+  db:
+    image: postgres:16
+    container_name: dms-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: dms_user
+      POSTGRES_PASSWORD: dms_password
+      POSTGRES_DB: dms_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # === Node.js Backend ===
+  server:
+    image: delivery-server           # your built image
+    container_name: dms-server
+    restart: always
+    working_dir: /app
+    env_file:
+      - ./server/.env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: dms_user
+      DB_PASSWORD: dms_password
+      DB_NAME: dms_db
+    depends_on:
+      - db
+    ports:
+      - "5001:5000"
+
+  # === React/Vite Frontend ===
+  client:
+    image: delivery-client           # your built image
+    container_name: dms-client
+    restart: always
+    working_dir: /app
+    env_file:
+      - ./client/.env
+    environment:
+      VITE_API_URL: "http://server:500"
+    depends_on:
+      - server
+    ports:
+      - "5173:5173"
+
+volumes:
+  db_data:

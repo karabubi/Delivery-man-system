@@ -1,0 +1,51 @@
+services:
+  # === PostgreSQL Database ===
+  db:
+    image: postgres:16
+    container_name: dms-postgres
+    restart: always
+    environment:
+      # match your server/.env
+      POSTGRES_USER: salehalkarabubi
+      POSTGRES_PASSWORD: ""
+      POSTGRES_DB: delivery_system
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # === Node.js Backend ===
+  server:
+    image: delivery-server           # already built with: docker build -t delivery-server ./server
+    container_name: dms-server
+    restart: always
+    working_dir: /app
+    env_file:
+      - ./server/.env
+    # override only what must be different inside Docker
+    environment:
+      POSTGRES_HOST: db              # inside Docker, DB host is the service "db"
+    depends_on:
+      - db
+    ports:
+      # host:container  (server listens on PORT=5001 from your .env)
+      - "5001:5001"
+
+  # === React/Vite Frontend ===
+  client:
+    image: delivery-client           # already built with: docker build -t delivery-client ./client
+    container_name: dms-client
+    restart: always
+    working_dir: /app
+    env_file:
+      - ./client/.env
+    # inside Docker network, client talks to server:5001
+    environment:
+      VITE_API_URL: "http://server:5001"
+    depends_on:
+      - server
+    ports:
+      - "5173:5173"
+
+volumes:
+  db_data:

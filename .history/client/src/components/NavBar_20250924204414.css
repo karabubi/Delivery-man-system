@@ -1,0 +1,294 @@
+/* Import Inter font for modern typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+/* --------------------------------
+   Design Tokens
+-----------------------------------*/
+:root {
+  --main-font: 'Inter', sans-serif;
+
+  /* Colors */
+  --text-on-dark: #ffffff;
+  --text-muted: #c7c7c7;
+  --accent: #C21515;
+  --accent-hover: #a51111;
+  --success: #28A745;
+  --success-hover: #1f8637;
+  --surface-strong: rgba(23, 22, 22, 0.9);
+
+  /* Effects */
+  --shadow: 0 8px 24px rgba(0,0,0,0.3);
+  --blur: blur(8px);
+
+  /* Shape / spacing */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --gap-sm: 8px;
+  --gap-md: 12px;
+  --gap-lg: 16px;
+}
+
+/* --------------------------------
+   Global
+-----------------------------------*/
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--main-font);
+  background: #0b0b0b;
+  color: var(--text-on-dark);
+}
+
+/* --------------------------------
+   AppBar (KEEP background image)
+   Use className="appbar-hero" on your AppBar
+-----------------------------------*/
+.appbar-hero,
+.MuiAppBar-root.appbar-hero {
+  position: relative;
+  color: var(--text-on-dark);
+  background-color: transparent !important;
+  box-shadow: var(--shadow) !important;
+  overflow: hidden;
+  isolation: isolate;
+
+  /* Robust background-image with layered fallbacks */
+  background-image:
+    url("../assets/deliver.jpg"),
+    url("/src/assets/deliver.jpg"),
+    url("/assets/deliver.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  min-height: px;
+}
+
+/* Readability overlay */
+.appbar-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.65) 0%,
+    rgba(0,0,0,0.35) 40%,
+    rgba(0,0,0,0.65) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Toolbar glass panel */
+.appbar-hero .MuiToolbar-root {
+  position: relative;
+  z-index: 1;
+  padding: 10px 16px !important;
+  gap: var(--gap-md);
+  border-radius: var(--radius-lg);
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+}
+
+/* --------------------------------
+   Brand / Title
+-----------------------------------*/
+.navbar-title {
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: .5px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(0,0,0,0.35);
+  transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
+  white-space: nowrap;
+}
+.navbar-title:hover { transform: translateY(-1px); background: rgba(0,0,0,0.5); }
+.navbar-title:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* --------------------------------
+   Desktop Link Row
+   (Welcome + all links on SAME line)
+-----------------------------------*/
+.navbar-links-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-md);
+  flex-wrap: nowrap;          /* keep all items on one row */
+  white-space: nowrap;        /* prevent items from wrapping to next line */
+  overflow-x: auto;           /* allow horizontal scroll if overflow */
+  -ms-overflow-style: none;   /* hide scrollbar (IE/Edge) */
+  scrollbar-width: none;      /* hide scrollbar (Firefox) */
+}
+.navbar-links-left::-webkit-scrollbar { display: none; } /* hide scrollbar (WebKit) */
+
+/* --------------------------------
+   Unified chip style for LINKS (no wrap)
+-----------------------------------*/
+a.nav-link,
+.MuiButton-root.nav-link,
+button.nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  font-size: .95rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+
+  background: var(--surface-strong);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.06);
+  line-height: 1.2;
+  min-height: 38px;
+
+  white-space: nowrap;          /* links never wrap */
+  transition: background-color .16s ease, transform .16s ease, opacity .16s ease;
+}
+a.nav-link:hover,
+.MuiButton-root.nav-link:hover,
+button.nav-link:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-1px);
+}
+a.nav-link:focus-visible,
+.MuiButton-root.nav-link:focus-visible,
+button.nav-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------
+   Welcome chip (❌ NO WRAP)
+-----------------------------------*/
+.welcome-message {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  font-size: .95rem;          /* same size as links */
+  font-weight: 600;
+  color: #fff;
+
+  background: var(--surface-strong);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.06);
+  line-height: 1.2;
+  min-height: 38px;
+
+  white-space: nowrap;         /* remove wrapping */
+  overflow: hidden;            /* optional: keep layout neat if very long */
+  text-overflow: ellipsis;     /* optional: show … if it overflows */
+  max-width: none;             /* no forced width cap */
+}
+.welcome-message:hover { background: var(--surface-strong); transform: none; }
+
+/* --------------------------------
+   Auth Buttons / Clerk wrappers
+-----------------------------------*/
+.sign-in-button,
+.sign-out-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  line-height: 1;
+  transition: background-color .16s ease, transform .16s ease;
+}
+.sign-in-button { background: var(--accent); color: #fff; }
+.sign-in-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.sign-in-button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.sign-out-button { background: var(--success); color: #fff; }
+.sign-out-button:hover { background: var(--success-hover); transform: translateY(-1px); }
+.sign-out-button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.signIn-container {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  padding: 6px;
+}
+
+/* --------------------------------
+   Menu / Icons / Avatar
+-----------------------------------*/
+.menu-icon-button {
+  border-radius: var(--radius-md) !important;
+  transition: background-color .16s ease;
+}
+.menu-icon-button:hover { background: rgba(255,255,255,0.08); }
+
+.menu-icon {
+  color: #fff;
+  transition: transform .16s ease, color .16s ease;
+}
+.menu-icon-button:hover .menu-icon { color: #9ecbff; transform: scale(1.05); }
+
+.MuiAvatar-root {
+  width: 36px !important;
+  height: 36px !important;
+  margin-left: 10px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* Tooltip on dark */
+.MuiTooltip-tooltip {
+  background-color: rgba(10,10,10,0.9) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: var(--blur);
+}
+
+/* --------------------------------
+   Responsive
+-----------------------------------*/
+@media (max-width: 1024px) {
+  .appbar-hero .MuiToolbar-root { padding: 8px 12px !important; }
+  .navbar-title { font-size: 1.05rem; padding: 6px 10px; }
+  a.nav-link, .MuiButton-root.nav-link, button.nav-link { padding: 9px 12px; min-height: 36px; }
+  .welcome-message { padding: 9px 12px; min-height: 36px; }
+}
+
+@media (max-width: 768px) {
+  .navbar-links-left { display: none; } /* use hamburger on mobile */
+  .appbar-hero { min-height: 64px; }
+  .navbar-title { font-size: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .appbar-hero { min-height: 60px; }
+  .navbar-title { font-size: .95rem; letter-spacing: .3px; padding: 6px 10px; }
+  .MuiAvatar-root { width: 32px !important; height: 32px !important; }
+}
+
+/* --------------------------------
+   Reduced motion
+-----------------------------------*/
+@media (prefers-reduced-motion: reduce) {
+  .navbar-title,
+  a.nav-link, .MuiButton-root.nav-link, button.nav-link,
+  .welcome-message,
+  .menu-icon, .sign-in-button, .sign-out-button { transition: none !important; }
+}

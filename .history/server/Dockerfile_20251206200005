@@ -1,0 +1,20 @@
+# Use a lightweight Node.js image
+FROM node:20-alpine
+
+# Create and set working directory inside the container
+WORKDIR /app
+
+# Copy dependency files first (better caching)
+COPY package*.json ./
+
+# Install dependencies inside the container
+RUN npm install
+
+# Copy all backend code into the container
+COPY . .
+
+# Expose the port used by your Express server
+EXPOSE 5000
+
+# Start your server (change "server.js" if your main file is index.js)
+CMD ["node", "server.js"]
