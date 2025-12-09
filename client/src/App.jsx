@@ -1,3 +1,4 @@
+///Users/salehalkarabubi/works/project/Delivery-man-system/client/src/App.jsx
 import { ClerkProvider } from "@clerk/clerk-react";
 import { Outlet } from "react-router-dom";
 import NavBar from "./components/NavBar";
