@@ -15,7 +15,7 @@ const Home = () => {
         <h2>How to Use the Delivery System</h2>
         <p>
           The Delivery System helps you organize your deliveries and optimize
-          your routes, saving time and cost. Here's how you can use it:
+          your routes, saving time and cost Here&apos;s how you can use it:
         </p>
 
         <div className="info-section-R">
@@ -60,7 +60,7 @@ const Home = () => {
           <ul>
             <li>
               Fetches delivery data (address, latitude, longitude) via API using
-              the user's token stored in localStorage.
+              the user&apos;s token stored in localStorage.
             </li>
             <li>
               Renders a list of addresses with their geographical coordinates.
