@@ -1,3 +1,4 @@
+///Users/salehalkarabubi/works/project/Delivery-man-system/server/migrations
 exports.up = async function(knex) {
   // Drop foreign key constraint on user_id in deliveries table
   await knex.schema.alterTable('deliveries', function(table) {
