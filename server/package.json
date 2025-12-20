@@ -27,7 +27,7 @@
     "leaflet": "^1.9.4",
     "multer": "^1.4.5-lts.1",
     "papaparse": "^5.4.1",
-    "pg": "^8.13.2",
+    "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
     "polyline": "^0.2.0",
     "postgis": "^1.0.5",
