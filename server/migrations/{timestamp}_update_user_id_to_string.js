@@ -47,13 +47,10 @@
 // migrations/{timestamp}_update_user_id_to_string.js
 
 exports.up = async function (knex) {
-  // Postgres primary key columns must stay NOT NULL.
-  // We only ensure the id column is VARCHAR(255) and keep NOT NULL.
-  await knex.schema.alterTable("users", (table) => {
-    table.string("id", 255).notNullable().alter();
-  });
+  await knex.raw(`
+    ALTER TABLE users
+    ALTER COLUMN id TYPE VARCHAR(255);
+  `);
 };
 
-exports.down = async function (knex) {
-  // rollback not needed for now
-};
+exports.down = async function (knex) {};
