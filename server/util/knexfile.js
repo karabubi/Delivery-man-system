@@ -41,7 +41,7 @@
 //     }
 //   };
 
-
+///Users/salehalkarabubi/works/project/Delivery-man-system/server/util/knexfile.js
 
 const useSSL =
   process.env.POSTGRES_SSL === "true" || process.env.NODE_ENV === "production";

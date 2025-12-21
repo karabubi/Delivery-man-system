@@ -18,6 +18,7 @@
 
 // module.exports = db;
 
+///Users/salehalkarabubi/works/project/Delivery-man-system/server/util/db-connect.js
 
 const knex = require("knex");
 
