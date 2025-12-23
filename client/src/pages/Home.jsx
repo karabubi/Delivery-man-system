@@ -1,5 +1,7 @@
+///Users/salehalkarabubi/works/project/Delivery-man-system/client/src/pages/Home.jsx
 import "./Home.css";
 import BackToTop from "../components/BackToTop";
+
 const Home = () => {
   return (
     <div className="home-container">
@@ -13,10 +15,76 @@ const Home = () => {
       {/* Main Content Section */}
       <div className="home-main">
         <h2>How to Use the Delivery System</h2>
+
         <p>
           The Delivery System helps you organize your deliveries and optimize
-          your routes, saving time and cost Here&apos;s how you can use it:
+          your routes, saving time and cost. Here&apos;s how you can use it:
         </p>
+
+        {/* ✅ Professional Quick Steps (no title) */}
+        <div className="quick-steps">
+          <div className="quick-steps-grid">
+            <div className="quick-step">
+              <div className="quick-step-left">
+                <span className="quick-step-num">1</span>
+                <span className="quick-step-icon" aria-hidden="true">
+                  👤
+                </span>
+              </div>
+              <div className="quick-step-right">
+                <div className="quick-step-title">Sign Up / Log In</div>
+                <div className="quick-step-text">
+                  Create an account and log in to access the system.
+                </div>
+              </div>
+            </div>
+
+            <div className="quick-step">
+              <div className="quick-step-left">
+                <span className="quick-step-num">2</span>
+                <span className="quick-step-icon" aria-hidden="true">
+                  📦
+                </span>
+              </div>
+              <div className="quick-step-right">
+                <div className="quick-step-title">Delivery Management</div>
+                <div className="quick-step-text">
+                  Upload a CSV file with delivery addresses.
+                </div>
+              </div>
+            </div>
+
+            <div className="quick-step">
+              <div className="quick-step-left">
+                <span className="quick-step-num">3</span>
+                <span className="quick-step-icon" aria-hidden="true">
+                  📍
+                </span>
+              </div>
+              <div className="quick-step-right">
+                <div className="quick-step-title">Addresses</div>
+                <div className="quick-step-text">
+                  Review all uploaded addresses after import.
+                </div>
+              </div>
+            </div>
+
+            <div className="quick-step">
+              <div className="quick-step-left">
+                <span className="quick-step-num">4</span>
+                <span className="quick-step-icon" aria-hidden="true">
+                  🧭
+                </span>
+              </div>
+              <div className="quick-step-right">
+                <div className="quick-step-title">Route Dashboard</div>
+                <div className="quick-step-text">
+                  View the optimal delivery route and results.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="info-section-R">
           <strong>RouteDashboard:</strong>
@@ -119,6 +187,7 @@ const Home = () => {
           manage your delivery addresses directly.
         </p>
       </div>
+
       <BackToTop />
     </div>
   );

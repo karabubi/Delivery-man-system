@@ -21,7 +21,6 @@ body {
   padding: 0;
   background-color: var(--secondary-color);
   color: var(--text-color);
-  box-sizing: border-box;
   line-height: 1.6;
   box-sizing: border-box;
 }
@@ -55,12 +54,10 @@ body {
 
 .header-content h1 {
   font-size: 3rem;
-  font-family: var(--main-font);
   margin: 0;
   font-weight: bold;
   padding: 0.5rem;
   transition: color var(--transition-speed);
-  box-sizing: border-box;
 }
 
 .header-content h1:hover {
@@ -81,14 +78,12 @@ body {
 
 .home-main h2 {
   font-size: 2rem;
-  font-family: var(--main-font);
   margin-bottom: 1rem;
   color: var(--primary-color);
 }
 
 .home-main p {
   font-size: 1.1rem;
-  font-family: var(--main-font);
   line-height: 1.8;
   margin-bottom: 1.5rem;
 }
@@ -135,7 +130,6 @@ body {
   margin: 0;
   text-align: left;
   font-size: 1rem;
-  font-family: var(--main-font);
   color: var(--text-color);
 }
 
@@ -156,6 +150,79 @@ body {
   padding-left: 2rem;
   margin: 0;
   list-style-type: disc;
+}
+
+/* ------------------ Quick Steps (Professional UI) ------------------ */
+.quick-steps {
+  margin: 1.2rem 0 2rem;
+  padding: 1.2rem;
+  border-radius: calc(var(--border-radius) + 4px);
+  background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+  border: 1px solid rgba(0, 123, 255, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.quick-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.quick-step {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  padding: 0.95rem;
+  border-radius: calc(var(--border-radius) + 2px);
+  background: var(--background-color);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed),
+    border-color var(--transition-speed);
+}
+
+.quick-step:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 123, 255, 0.25);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.08);
+}
+
+.quick-step-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 78px;
+}
+
+.quick-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--background-color);
+  background: var(--primary-color);
+  box-shadow: 0 6px 14px rgba(0, 123, 255, 0.28);
+}
+
+.quick-step-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.quick-step-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.2rem;
+}
+
+.quick-step-text {
+  font-size: 0.95rem;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.4;
 }
 
 /* Responsive Design for Tablets */
@@ -187,6 +254,16 @@ body {
   .info-section-D p,
   .info-section-B p {
     font-size: 0.95rem;
+  }
+}
+
+/* Responsive Quick Steps */
+@media (max-width: 700px) {
+  .quick-steps-grid {
+    grid-template-columns: 1fr;
+  }
+  .quick-step-left {
+    min-width: 70px;
   }
 }
 
